@@ -1,5 +1,5 @@
 var sprites = {
- frog: { sx: 0, sy: 0, w: 38, h: 43, frames: 3 },
+ frog: { sx: 0, sy: 333, w: 37, h: 37, frames: 3 },
  missile: { sx: 0, sy: 42, w: 7, h: 20, frames: 1 },
  enemy_purple: { sx: 37, sy: 0, w: 42, h: 43, frames: 1 },
  enemy_bee: { sx: 79, sy: 0, w: 37, h: 43, frames: 1 },
@@ -50,7 +50,7 @@ Sprite.prototype.hit = function(damage) {
 
 var PlayerFrog = function() { 
 
-  this.setup('frog', { vx: 0, frame: 0, reloadTime: 0.25, maxVel: 200 });
+  this.setup('frog', { vx: 0, vy:0, frame: 0, reloadTime: 0.25, maxVel: 200 });
 
    this.x = Game.width/2 - this.w / 2;
    this.y = Game.height - 10 - this.h;
@@ -69,7 +69,18 @@ var PlayerFrog = function() {
      else if(this.x > Game.width - this.w) { 
        this.x = Game.width - this.w 
      }
+     	//Intento de que se mueva arriba y abajo
+     if(Game.keys['down']) { this.vy = -this.maxVel; }
+     else if(Game.keys['up']) { this.vy = this.maxVel; }
+     else { this.vy = 0; }
 
+     this.y += this.vy * dt;
+
+     if(this.y < 0) { this.y = 0; }
+     else if(this.y > Game.height - this.h) { 
+       this.y = Game.height - this.h
+     }
+     //Final del intento
     this.reload-=dt;
     if(Game.keys['fire'] && this.reload < 0) {
       Game.keys['fire'] = false;
