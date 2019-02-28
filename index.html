@@ -1,0 +1,34 @@
+	<!DOCTYPE html">
+	<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+
+		<link href='http://fonts.googleapis.com/css?family=Lobster' rel='stylesheet' type='text/css'>
+		<title>DVI: Práctica 1</title>
+		<meta name="apple-mobile-web-app-capable" content="yes"/>
+		<meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+		<link rel="apple-touch-icon" sizes="57x57" href="apple-touch-icon-57x57.png"/>
+		<link rel="apple-touch-icon" sizes="114x114" href="apple-touch-icon-114x114.png"/>
+		<link rel="apple-touch-startup-image" href="apple-touch-splash.png"/>
+		<meta name="viewport" content="width=device-width, maximum-scale=1.0, initial-scale=1.0, user-scalable=no"/>
+		<link rel="stylesheet" href="css/practica1.css"/>
+	</head>
+
+	<body>
+
+		<div id="gamecontainer" class="fullscreen"></div>
+		<script src="src/auxiliar.js"></script>
+		<script src="src/practica1.js"></script>
+
+		<!-- Para forzar la carga de las fuentes y que se puedan usar en el canvas  -->
+		<script type="text/javascript">
+		WebFontConfig = {
+			google: { families: [ 'Lobster' ] },
+			active: function() { start(); }
+		};
+		</script>
+
+
+	</body>
+	</html>
