@@ -59,6 +59,7 @@ var PlayerFrog = function() {
 
 
    this.step = function(dt) {
+     //Movimiento a izquierda y derecha
      if(Game.keys['left']) { this.vx = -this.maxVel; }
      else if(Game.keys['right']) { this.vx = this.maxVel; }
      else { this.vx = 0; }
@@ -69,9 +70,9 @@ var PlayerFrog = function() {
      else if(this.x > Game.width - this.w) { 
        this.x = Game.width - this.w 
      }
-     	//Intento de que se mueva arriba y abajo
-     if(Game.keys['down']) { this.vy = -this.maxVel; }
-     else if(Game.keys['up']) { this.vy = this.maxVel; }
+     //Movimiento arriba y abajo
+     if(Game.keys['down']) { this.vy = this.maxVel; }
+     else if(Game.keys['up']) { this.vy = -this.maxVel; }
      else { this.vy = 0; }
 
      this.y += this.vy * dt;
@@ -80,7 +81,7 @@ var PlayerFrog = function() {
      else if(this.y > Game.height - this.h) { 
        this.y = Game.height - this.h
      }
-     //Final del intento
+     //Disparos (No lo quito por si acaso)
     this.reload-=dt;
     if(Game.keys['fire'] && this.reload < 0) {
       Game.keys['fire'] = false;
