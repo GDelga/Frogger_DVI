@@ -12,12 +12,12 @@ var startGame = function() {
 
 var playGame = function() {
 
-  Game.setBoard(0,new Backgroundfield());
+  //Game.setBoard(0,new Backgroundfield());
 
   var board = new GameBoard();
+  board.add(new BackGround());
   board.add(new PlayerFrog());
-  board.add(new Level(level1,winGame));
-  Game.setBoard(1,board);
+  Game.setBoard(0,board);
 }
 
 var winGame = function() {
