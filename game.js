@@ -17,6 +17,8 @@ var playGame = function() {
   var board = new GameBoard();
   board.add(new BackGround());
   board.add(new PlayerFrog());
+  board.add(new Car(cars['camion_marron']));
+  board.add(new Car(cars['coche_naranja']));
   Game.setBoard(0,board);
 }
 

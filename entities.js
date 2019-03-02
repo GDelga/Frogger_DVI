@@ -1,6 +1,8 @@
 var sprites = {
-  frog: { sx: 0, sy: 333, w: 37, h: 37, frames: 3 },
-  fondo: { sx: 422, sy: 0, w: 550, h: 625, frames: 1 }
+  frog: { sx: 0 , sy: 333, w: 37, h: 37, frames: 3 },
+  fondo: { sx: 422, sy: 0, w: 550, h: 625, frames: 1 },
+  camion_marron: {sx: 148, sy: 62, w: 200, h: 47, frames: 1},
+  coche_naranja: {sx: 7, sy: 62, w: 122, h: 47, frames: 1}
   /*
   missile: { sx: 0, sy: 42, w: 7, h: 20, frames: 1 },
   enemy_purple: { sx: 37, sy: 0, w: 42, h: 43, frames: 1 },
@@ -182,7 +184,57 @@ var enemies = {
   }
 };
 
+var cars = {
+  camion_marron:{
+    x: 400, y: 527, sprite: 'camion_marron',health: 10, V:-100
+  },
+  coche_naranja:{
+    x: 12, y: 480, sprite: 'coche_naranja',health: 10, V:100
+  }
+};
 
+var Car = function(blueprint){
+  console.log("setup");
+  this.setup(blueprint.sprite, blueprint);
+
+}
+Car.prototype = new Sprite();
+Car.prototype.type = OBJECT_ENEMY;
+
+Car.prototype.step = function (dt) {
+  this.t += dt;
+  this.vx = this.V;
+  this.vy = 0;
+  //this.vx = this.A + this.B * Math.sin(this.C * this.t + this.D);
+  //this.vy = this.E + this.F * Math.sin(this.G * this.t + this.H);
+  this.x += this.vx * dt;
+  this.y += this.vy * dt;
+  if (this.y > Game.height ||
+    this.x < -this.w ||
+    this.x > Game.width) {
+      console.log("remove");
+    this.board.remove(this);
+  }
+
+  /*var collision = this.board.collide(this, OBJECT_PLAYER);
+  if (collision) {
+    collision.hit(this.damage);
+    this.board.remove(this);
+  }*/
+
+}
+
+/*Car.prototype.hit = function (damage) {
+  this.health -= damage;
+  if (this.health <= 0) {
+    if (this.board.remove(this)) {
+      this.board.add(new Explosion(this.x + this.w / 2,
+        this.y + this.h / 2));
+    }
+  }
+
+}*/
+/*
 var Enemy = function (blueprint, override) {
   this.merge(this.baseParameters);
   this.setup(blueprint.sprite, blueprint);
@@ -229,6 +281,7 @@ Enemy.prototype.hit = function (damage) {
   }
 
 }
+*/
 //BACKGROUND
 var BackGround = function () {
 
