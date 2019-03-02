@@ -2,7 +2,8 @@ var sprites = {
   frog: { sx: 0 , sy: 333, w: 37, h: 37, frames: 3 },
   fondo: { sx: 422, sy: 0, w: 550, h: 625, frames: 1 },
   camion_marron: {sx: 148, sy: 62, w: 200, h: 47, frames: 1},
-  coche_naranja: {sx: 7, sy: 62, w: 122, h: 47, frames: 1}
+  coche_naranja: {sx: 7, sy: 62, w: 122, h: 47, frames: 1},
+  coche_verde: {sx: 102, sy: 0,w: 102, h: 60, frames: 1},
   /*
   missile: { sx: 0, sy: 42, w: 7, h: 20, frames: 1 },
   enemy_purple: { sx: 37, sy: 0, w: 42, h: 43, frames: 1 },
@@ -184,12 +185,16 @@ var enemies = {
   }
 };
 
+// Array con todos los vehiculos del juego
 var cars = {
   camion_marron:{
     x: 400, y: 527, sprite: 'camion_marron',health: 10, V:-100
   },
   coche_naranja:{
     x: 12, y: 480, sprite: 'coche_naranja',health: 10, V:100
+  },
+  coche_verde:{
+    x: 12, y: 480, sprite: 'coche_verde', health: 20, V:50
   }
 };
 
