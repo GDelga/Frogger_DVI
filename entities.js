@@ -1,5 +1,5 @@
 var sprites = {
-  frog: { sx: 0 , sy: 333, w: 37, h: 37, frames: 3 },
+  frog: { sx: 0 , sy: 346, w: 37, h: 25, frames: 3 },
   fondo: { sx: 422, sy: 0, w: 550, h: 625, frames: 1 },
   camion_marron: {sx: 148, sy: 62, w: 200, h: 47, frames: 1},
   coche_naranja: {sx: 7, sy: 62, w: 122, h: 47, frames: 1},
@@ -221,11 +221,11 @@ Car.prototype.step = function (dt) {
     this.board.remove(this);
   }
 
-  /*var collision = this.board.collide(this, OBJECT_PLAYER);
+  var collision = this.board.collide(this, OBJECT_PLAYER);
   if (collision) {
     collision.hit(this.damage);
-    this.board.remove(this);
-  }*/
+    //this.board.remove(this);
+  }
 
 }
 
