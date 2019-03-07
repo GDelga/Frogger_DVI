@@ -27,19 +27,20 @@ var Game = new function() {
   var KEY_CODES = { 37:'left', 39:'right', 32 :'fire', 38:'up', 40: 'down' };
 
   this.keys = {};
+  this.pulsado = false;
 
   this.setupInput = function() {
     window.addEventListener('keydown',function(e) {
       if(KEY_CODES[e.keyCode]) {
-       Game.keys[KEY_CODES[e.keyCode]] += 1;
+       Game.keys[KEY_CODES[e.keyCode]] = true;
        e.preventDefault();
       }
     },false);
 
     window.addEventListener('keyup',function(e) {
       if(KEY_CODES[e.keyCode]) {
-       Game.keys[KEY_CODES[e.keyCode]] -= 1;
-       if(Game.keys[KEY_CODES[e.keyCode]] < 0) Game.keys[KEY_CODES[e.keyCode]] = 0;
+       Game.keys[KEY_CODES[e.keyCode]] = false; 
+       Game.pulsado = false;
        e.preventDefault();
       }
     },false);
