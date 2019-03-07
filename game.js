@@ -19,7 +19,7 @@ var playGame = function() {
   board.add(new BackGround());
   board.add(new PlayerFrog());
   board.add(new Car(cars['camion_marron']));
-  board.add(new Car(cars['coche_naranja']));
+  board.add(new Car(cars['coche_bomberos']));
   board.add(new Car(cars['coche_verde']));
   board.add(new Car(cars['coche_azul']));
   board.add(new Car(cars['coche_amarillo']));

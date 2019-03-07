@@ -2,7 +2,7 @@ var sprites = {
   frog: { sx: 0 , sy: 346, w: 37, h: 25, frames: 3 },
   fondo: { sx: 422, sy: 0, w: 550, h: 625, frames: 1 },
   camion_marron: {sx: 148, sy: 62, w: 200, h: 47, frames: 1},
-  coche_naranja: {sx: 7, sy: 62, w: 122, h: 47, frames: 1},
+  coche_bomberos: {sx: 7, sy: 62, w: 122, h: 47, frames: 1},
   coche_verde: {sx: 102, sy: 0,w: 102, h: 60, frames: 1},
   coche_azul: {sx: 8, sy: 4, w:92 , h: 52 , frames: 1},
   tronco_mediano: {sx: 10, sy: 123, w:92 , h: 52 , frames: 1},
@@ -210,8 +210,8 @@ var cars = {
   camion_marron:{
     x: 400, y: 527, sprite: 'camion_marron',health: 10, V:-100
   },
-  coche_naranja:{
-    x: 12, y: 480, sprite: 'coche_naranja',health: 10, V:100
+  coche_bomberos:{
+    x: 12, y: 480, sprite: 'coche_bomberos',health: 10, V:100
   },
   coche_verde:{
     x: 12, y: 428, sprite: 'coche_verde', health: 20, V:50
