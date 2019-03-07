@@ -7,7 +7,8 @@ var sprites = {
   coche_azul: {sx: 8, sy: 4, w:92 , h: 52 , frames: 1},
   tronco_mediano: {sx: 10, sy: 123, w:92 , h: 52 , frames: 1},
   tronco_pequeno: {sx: 270, sy: 173, w:92 , h: 52 , frames: 1},
-  tronco_grande: {sx: 9, sy: 171, w:92 , h: 52 , frames: 1}
+  tronco_grande: {sx: 9, sy: 171, w:92 , h: 52 , frames: 1},
+  coche_amarillo: {sx: 212 , sy: 2, w: 105 , h: 55, frames: 1}
   /*
   missile: { sx: 0, sy: 42, w: 7, h: 20, frames: 1 },
   enemy_purple: { sx: 37, sy: 0, w: 42, h: 43, frames: 1 },
@@ -217,6 +218,9 @@ var cars = {
   },
   coche_azul: {
   	x:12 , y: 335, sprite: 'coche_azul', health: 5, V:75
+  },
+  coche_amarillo: {
+  	x:12 , y:379 , sprite: 'coche_amarillo', health: 10, V: 250
   }
 };
 

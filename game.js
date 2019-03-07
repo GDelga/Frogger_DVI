@@ -22,6 +22,7 @@ var playGame = function() {
   board.add(new Car(cars['coche_naranja']));
   board.add(new Car(cars['coche_verde']));
   board.add(new Car(cars['coche_azul']));
+  board.add(new Car(cars['coche_amarillo']));
   
   Game.setBoard(0,board);
 }
