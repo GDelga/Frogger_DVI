@@ -5,10 +5,12 @@ var sprites = {
   coche_bomberos: {sx: 7, sy: 62, w: 122, h: 47, frames: 1},
   coche_verde: {sx: 102, sy: 0,w: 102, h: 60, frames: 1},
   coche_azul: {sx: 8, sy: 4, w:92 , h: 52 , frames: 1},
+  coche_amarillo: {sx: 212 , sy: 2, w: 105 , h: 55, frames: 1},
   tronco_mediano: {sx: 10, sy: 123, w:92 , h: 52 , frames: 1},
   tronco_pequeno: {sx: 270, sy: 173, w:92 , h: 52 , frames: 1},
   tronco_grande: {sx: 9, sy: 171, w:92 , h: 52 , frames: 1},
-  coche_amarillo: {sx: 212 , sy: 2, w: 105 , h: 55, frames: 1}
+  waters_malas:{sx:552,sy:242,w:421,h:355, frames:1}
+
   /*
   missile: { sx: 0, sy: 42, w: 7, h: 20, frames: 1 },
   enemy_purple: { sx: 37, sy: 0, w: 42, h: 43, frames: 1 },
@@ -224,6 +226,12 @@ var cars = {
   }
 };
 
+var waters = {
+  waters_malas: {
+    x: 421, y: 335, sprite: 'waters_malas', health:1
+  }
+}
+
 var Car = function(blueprint){
   console.log("setup");
   this.setup(blueprint.sprite, blueprint);
@@ -247,13 +255,46 @@ Car.prototype.step = function (dt) {
     this.board.remove(this);
   }
 
+  // Hace las colisiones de la rana
   var collision = this.board.collide(this, OBJECT_PLAYER);
   if (collision) {
     collision.hit(this.damage);
     //this.board.remove(this);
   }
+}
+
+
+var Water = function(blueprint){
+  console.log("setup");
+  this.setup(blueprint.sprite, blueprint);
 
 }
+Water.prototype = new Sprite();
+Water.prototype.type = OBJECT_ENEMY;
+
+Water.prototype.step = function (dt) {
+  this.t += dt;
+  this.vx = this.V;
+  this.vy = 0;
+  //this.vx = this.A + this.B * Math.sin(this.C * this.t + this.D);
+  //this.vy = this.E + this.F * Math.sin(this.G * this.t + this.H);
+  this.x += this.vx * dt;
+  this.y += this.vy * dt;
+  if (this.y > Game.height ||
+    this.x < -this.w ||
+    this.x > Game.width) {
+      console.log("remove");
+    this.board.remove(this);
+  }
+
+  // Hace las colisiones de la rana
+  var collision = this.board.collide(this, OBJECT_PLAYER);
+  if (collision) {
+    collision.hit(this.damage);
+    //this.board.remove(this);
+  }
+}
+
 
 /*Car.prototype.hit = function (damage) {
   this.health -= damage;

@@ -23,6 +23,7 @@ var playGame = function() {
   board.add(new Car(cars['coche_verde']));
   board.add(new Car(cars['coche_azul']));
   board.add(new Car(cars['coche_amarillo']));
+  board.add(new Water(waters['waters_malas']));
   
   Game.setBoard(0,board);
 }
