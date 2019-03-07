@@ -4,7 +4,8 @@ var sprites = {
   camion_marron: {sx: 148, sy: 62, w: 200, h: 47, frames: 1},
   coche_naranja: {sx: 7, sy: 62, w: 122, h: 47, frames: 1},
   coche_verde: {sx: 102, sy: 0,w: 102, h: 60, frames: 1},
-  coche_azul: {sx: 8, sy: 4, w:92 , h: 52 , frames: 1}
+  coche_azul: {sx: 8, sy: 4, w:92 , h: 52 , frames: 1},
+  coche_amarillo: {sx: 212 , sy: 2, w: 105 , h: 55, frames: 1}
   /*
   missile: { sx: 0, sy: 42, w: 7, h: 20, frames: 1 },
   enemy_purple: { sx: 37, sy: 0, w: 42, h: 43, frames: 1 },
@@ -199,6 +200,9 @@ var cars = {
   },
   coche_azul: {
   	x:12 , y: 335, sprite: 'coche_azul', health: 5, V:75
+  },
+  coche_amarillo: {
+  	x:12 , y:379 , sprite: 'coche_amarillo', health: 10, V: 250
   }
 };
 
