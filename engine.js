@@ -31,14 +31,15 @@ var Game = new function() {
   this.setupInput = function() {
     window.addEventListener('keydown',function(e) {
       if(KEY_CODES[e.keyCode]) {
-       Game.keys[KEY_CODES[e.keyCode]] = true;
+       Game.keys[KEY_CODES[e.keyCode]] += 1;
        e.preventDefault();
       }
     },false);
 
     window.addEventListener('keyup',function(e) {
       if(KEY_CODES[e.keyCode]) {
-       Game.keys[KEY_CODES[e.keyCode]] = false; 
+       Game.keys[KEY_CODES[e.keyCode]] -= 1;
+       if(Game.keys[KEY_CODES[e.keyCode]] < 0) Game.keys[KEY_CODES[e.keyCode]] = 0;
        e.preventDefault();
       }
     },false);

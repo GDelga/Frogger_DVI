@@ -1,5 +1,5 @@
 var sprites = {
-  frog: { sx: 0 , sy: 346, w: 37, h: 25, frames: 3 },
+  frog: { sx: 0 , sy: 344, w: 37, h: 48, frames: 1 },
   fondo: { sx: 422, sy: 0, w: 550, h: 625, frames: 1 },
   camion_marron: {sx: 148, sy: 62, w: 200, h: 47, frames: 1},
   coche_naranja: {sx: 7, sy: 62, w: 122, h: 47, frames: 1},
@@ -57,46 +57,47 @@ Sprite.prototype.hit = function (damage) {
 
 var PlayerFrog = function () {
 
-  this.setup('frog', { vx: 0, vy: 0, frame: 0, reloadTime: 0.25, maxVel: 200 });
+  this.setup('frog', { vx: 0, vy: 0, frame: 0, reloadTime: 0.25, maxVel: 1 });
 
-  this.x = Game.width / 2 - this.w / 2;
-  this.y = Game.height - 10 - this.h;
+  this.x = Game.width / 2 -27 - this.w / 2;
+  this.y = Game.height - this.h;
 
   this.reload = this.reloadTime;
 
 
   this.step = function (dt) {
     //Movimiento a izquierda y derecha
-    if (Game.keys['left']) { this.vx = -this.maxVel; }
-    else if (Game.keys['right']) { this.vx = this.maxVel; }
-    else { this.vx = 0; }
+    if(Game.pulsado == false) {
+    	Game.pulsado = true;
+	    if (Game.keys['left']) { this.x -= 40}
+	    else if (Game.keys['right']) { this.x += 40 }
+	    else { this.x += 0; }
 
-    this.x += this.vx * dt;
+	    if (this.x < 0) { this.x = 0; }
+	    else if (this.x > Game.width - this.w) {
+	      this.x = Game.width - this.w
+	    }
+	    //Movimiento arriba y abajo
+	    if (Game.keys['down']) { this.vy = this.maxVel; }
+	    else if (Game.keys['up']) { this.vy = -this.maxVel; }
+	    else { this.vy = 0; }
 
-    if (this.x < 0) { this.x = 0; }
-    else if (this.x > Game.width - this.w) {
-      this.x = Game.width - this.w
-    }
-    //Movimiento arriba y abajo
-    if (Game.keys['down']) { this.vy = this.maxVel; }
-    else if (Game.keys['up']) { this.vy = -this.maxVel; }
-    else { this.vy = 0; }
+	    this.y += this.vy * dt;
 
-    this.y += this.vy * dt;
+	    if (this.y < 0) { this.y = 0; }
+	    else if (this.y > Game.height - this.h) {
+	      this.y = Game.height - this.h
+	    }
+	    //Disparos (No lo quito por si acaso)
+	    this.reload -= dt;
+	    if (Game.keys['fire'] && this.reload < 0) {
+	      Game.keys['fire'] = false;
+	      this.reload = this.reloadTime;
 
-    if (this.y < 0) { this.y = 0; }
-    else if (this.y > Game.height - this.h) {
-      this.y = Game.height - this.h
-    }
-    //Disparos (No lo quito por si acaso)
-    this.reload -= dt;
-    if (Game.keys['fire'] && this.reload < 0) {
-      Game.keys['fire'] = false;
-      this.reload = this.reloadTime;
-
-      this.board.add(new PlayerMissile(this.x, this.y + this.h / 2));
-      this.board.add(new PlayerMissile(this.x + this.w, this.y + this.h / 2));
-    }
+	      this.board.add(new PlayerMissile(this.x, this.y + this.h / 2));
+	      this.board.add(new PlayerMissile(this.x + this.w, this.y + this.h / 2));
+	    }
+	}
 
   }
 
@@ -202,7 +203,7 @@ var cars = {
   	x:12 , y: 335, sprite: 'coche_azul', health: 5, V:75
   },
   coche_amarillo: {
-  	x:12 , y:379 , sprite: 'coche_amarillo', health: 10, V: 250
+  	x:12 , y:379, sprite: 'coche_amarillo', health: 10, V: 250
   }
 };
 
