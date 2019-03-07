@@ -46,5 +46,5 @@ var loseGame = function() {
 // y este después de realizar la inicialización llamará a
 // startGame
 window.addEventListener("load", function() {
-  Game.initialize("game",sprites,startGame);
+  Game.initialize("game",sprites,playGame);
 });
