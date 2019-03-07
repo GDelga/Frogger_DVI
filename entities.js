@@ -9,7 +9,7 @@ var sprites = {
   tronco_mediano: {sx: 10, sy: 123, w:92 , h: 52 , frames: 1},
   tronco_pequeno: {sx: 270, sy: 173, w:130 , h: 52 , frames: 1},
   tronco_grande: {sx: 9, sy: 171, w:92 , h: 52 , frames: 1},
-  waters_malas:{sx:552,sy:242,w:421,h:355, frames:1}
+  waters_malas:{sx:421,sy:49,w:550,h:242, frames:1}
 
   /*
   missile: { sx: 0, sy: 42, w: 7, h: 20, frames: 1 },
@@ -76,6 +76,9 @@ var PlayerFrog = function () {
     this.onTrunkIndicator = true;
   }
 
+  this.onTrunkIndicator = function(){
+    return this.onTrunkIndicator;
+  }
   this.step = function (dt) {
     //Movimiento a izquierda y derecha
     if(Game.pulsado == false) {
@@ -112,7 +115,8 @@ PlayerFrog.prototype = new Sprite();
 PlayerFrog.prototype.type = OBJECT_PLAYER;
 
 PlayerFrog.prototype.hit = function (damage) {
-
+  console.log("colision rana");
+  
   if (this.board.remove(this)) {
     loseGame();
   }
@@ -259,15 +263,14 @@ var cars = {
     x: 12, y: 335, sprite: 'coche_azul', health: 5, V: 75
   },
   coche_amarillo: {
-  	x:12 , y:379, sprite: 'coche_amarillo', health: 10, V: 250
+    x: 12, y: 379, sprite: 'coche_amarillo', health: 10, V: 250
+  },
+  waters_malas:{
+    x: 0, y: 49, sprite: 'waters_malas', health: 10
   }
 };
 
-var waters = {
-  waters_malas: {
-    x: 421, y: 335, sprite: 'waters_malas', health:1
-  }
-}
+
 
 var Car = function(blueprint){
   console.log("setup");
@@ -299,7 +302,6 @@ Car.prototype.step = function (dt) {
   }
 }
 
-
 var Water = function(blueprint){
   console.log("setup");
   this.setup(blueprint.sprite, blueprint);
@@ -307,27 +309,14 @@ var Water = function(blueprint){
 }
 Water.prototype = new Sprite();
 Water.prototype.type = OBJECT_ENEMY;
-
 Water.prototype.step = function (dt) {
-  this.t += dt;
-  this.vx = this.V;
-  this.vy = 0;
-  //this.vx = this.A + this.B * Math.sin(this.C * this.t + this.D);
-  //this.vy = this.E + this.F * Math.sin(this.G * this.t + this.H);
-  this.x += this.vx * dt;
-  this.y += this.vy * dt;
-  if (this.y > Game.height ||
-    this.x < -this.w ||
-    this.x > Game.width) {
-      console.log("remove");
-    this.board.remove(this);
-  }
 
   // Hace las colisiones de la rana
   var collision = this.board.collide(this, OBJECT_PLAYER);
   if (collision) {
-    collision.hit(this.damage);
-    //this.board.remove(this);
+    console.log("colision con agua");
+    if(!collision.onTrunkIndicator())
+      this.board.remove(this);
   }
 }
 
