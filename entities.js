@@ -117,6 +117,79 @@ PlayerFrog.prototype.hit = function (damage) {
 
 }
 
+///// EXPLOSION
+
+var Explosion = function (centerX, centerY) {
+  this.setup('explosion', { frame: 0 });
+  this.x = centerX - this.w / 2;
+  this.y = centerY - this.h / 2;
+  this.subFrame = 0;
+};
+
+Explosion.prototype = new Sprite();
+
+Explosion.prototype.step = function (dt) {
+  this.frame = Math.floor(this.subFrame++ / 3);
+  if (this.subFrame >= 36) {
+    this.board.remove(this);
+  }
+};
+
+
+
+/// Player Missile
+
+
+var PlayerMissile = function (x, y) {
+  this.setup('missile', { vy: -700, damage: 10 });
+  this.x = x - this.w / 2;
+  this.y = y - this.h;
+};
+
+PlayerMissile.prototype = new Sprite();
+PlayerMissile.prototype.type = OBJECT_PLAYER_PROJECTILE;
+
+
+PlayerMissile.prototype.step = function (dt) {
+  this.y += this.vy * dt;
+  if (this.y < -this.h) { this.board.remove(this); }
+
+  var collision = this.board.collide(this, OBJECT_ENEMY);
+  if (collision) {
+    collision.hit(this.damage);
+    this.board.remove(this);
+  } else if (this.y < -this.h) {
+    this.board.remove(this);
+  }
+};
+
+
+
+/// ENEMIES
+
+var enemies = {
+  straight: {
+    x: 0, y: -50, sprite: 'enemy_ship', health: 10,
+    E: 100
+  },
+  ltr: {
+    x: 0, y: -100, sprite: 'enemy_purple', health: 10,
+    B: 200, C: 1, E: 200
+  },
+  circle: {
+    x: 400, y: -50, sprite: 'enemy_circle', health: 10,
+    A: 0, B: -200, C: 1, E: 20, F: 200, G: 1, H: Math.PI / 2
+  },
+  wiggle: {
+    x: 100, y: -50, sprite: 'enemy_bee', health: 20,
+    B: 100, C: 4, E: 100
+  },
+  step: {
+    x: 0, y: -50, sprite: 'enemy_circle', health: 10,
+    B: 300, C: 1.5, E: 60
+  }
+};
+
 var objetos = {
   tortuga: {
     x: 0, y: 200, sprite: 'turtle', health: 10, V: 10
@@ -188,7 +261,6 @@ Turtle.prototype.step = function (dt) {
 
 }
 
-
 // Array con todos los vehiculos del juego
 var cars = {
   camion_marron: {
@@ -206,10 +278,12 @@ var cars = {
   coche_amarillo: {
     x: 12, y: 379, sprite: 'coche_amarillo', health: 10, V: 250
   },
+  // Menos este que no se que hace ahi
   waters_malas:{
     x: 0, y: 49, sprite: 'waters_malas', health: 10
   }
 };
+
 
 
 
@@ -340,3 +414,4 @@ var BackGround = function () {
 
 BackGround.prototype = new Sprite();
 BackGround.prototype.type = OBJECT_BOARD;
+
