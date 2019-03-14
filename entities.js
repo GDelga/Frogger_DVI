@@ -1,11 +1,11 @@
 var sprites = {
-  frog: { sx: 0 , sy: 344, w: 37, h: 38, frames: 1 },
+  frog: { sx: 0 , sy: 344, w: 34, h: 28, frames: 1 },
   fondo: { sx: 422, sy: 0, w: 550, h: 625, frames: 1 },
-  camion_marron: {sx: 148, sy: 62, w: 200, h: 47, frames: 1},
-  coche_bomberos: {sx: 7, sy: 62, w: 122, h: 47, frames: 1},
-  coche_verde: {sx: 102, sy: 0,w: 102, h: 60, frames: 1},
-  coche_azul: {sx: 8, sy: 4, w:92 , h: 48 , frames: 1},
-  coche_amarillo: {sx: 212 , sy: 2, w: 105 , h: 55, frames: 1},
+  camion_marron: {sx: 148, sy: 62, w: 180 , h: 45, frames: 1},
+  coche_bomberos: {sx: 7, sy: 62, w: 122, h: 45, frames: 1},
+  coche_verde: {sx: 102, sy: 0,w: 100, h: 50, frames: 1},
+  coche_azul: {sx: 8, sy: 4, w:92 , h: 50 , frames: 1},
+  coche_amarillo: {sx: 212 , sy: 2, w: 105 , h: 50, frames: 1},
   tronco_mediano: {sx: 10, sy: 123, w:92 , h: 52 , frames: 1},
   tronco_pequeno: {sx: 270, sy: 173, w:130 , h: 50 , frames: 1},
   tronco_grande: {sx: 9, sy: 171, w:92 , h: 60 , frames: 1},
@@ -54,8 +54,8 @@ var PlayerFrog = function () {
 
   this.setup('frog', { vx: 0, vy: 0, frame: 0, reloadTime: 0.25, maxVel: 1 });
 
-  this.x = Game.width / 2 -27 - this.w / 2;
-  this.y = Game.height - this.h;
+  this.x = Game.width / 2 -20 - this.w / 2;
+  this.y = Game.height - this.h -10;
   this.onTrunkIndicatorB = false;
 
   this.reload = this.reloadTime;
