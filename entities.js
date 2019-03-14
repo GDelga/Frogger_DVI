@@ -1,25 +1,15 @@
 var sprites = {
-  frog: { sx: 0 , sy: 344, w: 37, h: 48, frames: 1 },
+  frog: { sx: 0 , sy: 344, w: 34, h: 28, frames: 1 },
   fondo: { sx: 422, sy: 0, w: 550, h: 625, frames: 1 },
-  camion_marron: {sx: 148, sy: 62, w: 200, h: 47, frames: 1},
-  coche_bomberos: {sx: 7, sy: 62, w: 122, h: 47, frames: 1},
-  coche_verde: {sx: 102, sy: 0,w: 102, h: 60, frames: 1},
-  coche_azul: {sx: 8, sy: 4, w:92 , h: 52 , frames: 1},
-  coche_amarillo: {sx: 212 , sy: 2, w: 105 , h: 55, frames: 1},
+  camion_marron: {sx: 148, sy: 62, w: 180 , h: 45, frames: 1},
+  coche_bomberos: {sx: 7, sy: 62, w: 122, h: 45, frames: 1},
+  coche_verde: {sx: 102, sy: 0,w: 100, h: 50, frames: 1},
+  coche_azul: {sx: 8, sy: 4, w:92 , h: 50 , frames: 1},
+  coche_amarillo: {sx: 212 , sy: 2, w: 105 , h: 50, frames: 1},
   tronco_mediano: {sx: 10, sy: 123, w:92 , h: 52 , frames: 1},
-  tronco_pequeno: {sx: 270, sy: 173, w:130 , h: 52 , frames: 1},
-  tronco_grande: {sx: 9, sy: 171, w:92 , h: 52 , frames: 1},
-  waters_malas:{sx:421,sy:49,w:550,h:242, frames:1}
-
-  /*
-  missile: { sx: 0, sy: 42, w: 7, h: 20, frames: 1 },
-  enemy_purple: { sx: 37, sy: 0, w: 42, h: 43, frames: 1 },
-  enemy_bee: { sx: 79, sy: 0, w: 37, h: 43, frames: 1 },
-  enemy_ship: { sx: 116, sy: 0, w: 42, h: 43, frames: 1 },
-  enemy_circle: { sx: 158, sy: 0, w: 32, h: 33, frames: 1 },
-  explosion: { sx: 0, sy: 64, w: 64, h: 64, frames: 12 },
-  */
-
+  tronco_pequeno: {sx: 270, sy: 173, w:130 , h: 50 , frames: 1},
+  tronco_grande: {sx: 9, sy: 171, w:92 , h: 60 , frames: 1},
+  waters_malas:{sx:247,sy:480,w:550,h:242, frames: 1}
 };
 
 var OBJECT_PLAYER = 1,
@@ -64,49 +54,47 @@ var PlayerFrog = function () {
 
   this.setup('frog', { vx: 0, vy: 0, frame: 0, reloadTime: 0.25, maxVel: 1 });
 
-  this.x = Game.width / 2 -27 - this.w / 2;
-  this.y = Game.height - this.h;
-  this.onTrunkIndicator = false;
+  this.x = Game.width / 2 -20 - this.w / 2;
+  this.y = Game.height - this.h -10;
+  this.onTrunkIndicatorB = false;
 
   this.reload = this.reloadTime;
 
   this.onTrunk = function (vt) {
     this.vx = vt;
     console.log(this.vx);
-    this.onTrunkIndicator = true;
+    this.onTrunkIndicatorB = true;
   }
 
   this.onTrunkIndicator = function(){
-    return this.onTrunkIndicator;
+    return this.onTrunkIndicatorB;
   }
   this.step = function (dt) {
     //Movimiento a izquierda y derecha
+    if(this.onTrunkIndicatorB){
+      this.x += this.vx * dt;
+      console.log("ahora me debería mover");
+      //this.onTrunkIndicatorB = false;
+    }
     if(Game.pulsado == false) {
-	    if (Game.keys['left']) { this.x -= 40; Game.pulsado = true;}
-	    else if (Game.keys['right']) { this.x += 40; Game.pulsado = true; }
+	    if (Game.keys['left']) { this.x -= 40; Game.pulsado = true; }
+	    else if (Game.keys['right']) { this.x += 40; Game.pulsado = true;}
 	    else { this.x += 0; }
 	    if (this.x < 0) { this.x = 0; }
 	    else if (this.x > Game.width - this.w) {
 	      this.x = Game.width - this.w;
 	    }
 	    //Movimiento arriba y abajo
-	    if (Game.keys['down']) { this.y += 48; Game.pulsado = true;}
-	    else if (Game.keys['up']) { this.y -= 48; Game.pulsado = true;}
+	    if (Game.keys['down']) { this.y += 48; Game.pulsado = true; }
+	    else if (Game.keys['up']) { this.y -= 48; Game.pulsado = true; }
 	    else { this.y += 0; }
 	    if (this.y < 0) { this.y = 0; }
 	    else if (this.y > Game.height - this.h) {
 	      this.y = Game.height - this.h;
 	    }
-	    //Disparos (No lo quito por si acaso)
-	    this.reload -= dt;
-	    if (Game.keys['fire'] && this.reload < 0) {
-	      Game.keys['fire'] = false;
-	      this.reload = this.reloadTime;
-
-	      this.board.add(new PlayerMissile(this.x, this.y + this.h / 2));
-	      this.board.add(new PlayerMissile(this.x + this.w, this.y + this.h / 2));
-	    }
-	}
+  }
+  this.vx = 0;
+  this.onTrunkIndicatorB = false;
   }
 
 }
@@ -123,7 +111,6 @@ PlayerFrog.prototype.hit = function (damage) {
 
 
 }
-
 
 ///// EXPLOSION
 
@@ -218,7 +205,7 @@ var Trunk = function (blueprint) {
 
 }
 Trunk.prototype = new Sprite();
-Trunk.prototype.type = OBJECT_ENEMY;
+Trunk.prototype.type = OBJECT_POWERUP;
 
 Trunk.prototype.step = function (dt) {
   this.t += dt;
@@ -238,6 +225,7 @@ Trunk.prototype.step = function (dt) {
   var collision = this.board.collide(this, OBJECT_PLAYER);
   if (collision) {
     //collision.hit(this.damage);
+    console.log("colision con tronco");
     collision.onTrunk(-50);
 
     //this.board.remove(this);
@@ -300,22 +288,25 @@ Car.prototype.step = function (dt) {
     //this.board.remove(this);
   }
 }
-
+//tronco rana y agua
 var Water = function(blueprint){
-  console.log("setup");
   this.setup(blueprint.sprite, blueprint);
 
 }
 Water.prototype = new Sprite();
 Water.prototype.type = OBJECT_ENEMY;
+Water.prototype.draw = function(){};
 Water.prototype.step = function (dt) {
 
   // Hace las colisiones de la rana
   var collision = this.board.collide(this, OBJECT_PLAYER);
   if (collision) {
-    console.log("colision con agua");
-    if(!collision.onTrunkIndicator())
-      this.board.remove(this);
+    console.log(collision.onTrunkIndicatorB);
+    if(!collision.onTrunkIndicatorB){
+      console.log("colision con agua");
+      collision.hit(this.damage);
+    }
+      
   }
 }
 
