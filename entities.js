@@ -10,7 +10,7 @@ var sprites = {
   tronco_pequeno: {sx: 270, sy: 173, w:130 , h: 50 , frames: 1},
   tronco_grande: {sx: 9, sy: 171, w:92 , h: 60 , frames: 1},
   waters_malas:{sx:247,sy:480,w:550,h:242, frames: 1},
-  death: {sx:354 , sy:125 , w:52 , h:39, frames:1 }
+  death: {sx:354 , sy:125 , w:52 , h:39, frames:1 },
   turtle:{sx:281,sy:344,w:50,h:43, frames: 1}
 };
 
