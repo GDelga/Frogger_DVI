@@ -353,7 +353,6 @@ var Death = function(centerX,centerY) {
   this.setup('death', { frame: 0 });
   this.x = centerX - this.w/2;
   this.y = centerY - this.h/2;
-  this.subFrame = 0;
 };
 
 Death.prototype = new Sprite();
