@@ -1,4 +1,5 @@
 var sprites = {
+  logo: { sx: 48, sy: 400, w: 304, h: 225, frames: 1},
   frog: { sx: 0 , sy: 344, w: 34, h: 28, frames: 1 },
   fondo: { sx: 422, sy: 0, w: 550, h: 625, frames: 1 },
   camion_marron: {sx: 148, sy: 62, w: 180 , h: 45, frames: 1},
@@ -211,6 +212,7 @@ var objetos = {
 
   }
 };
+
 var Trunk = function (blueprint) {
   console.log("setup");
   this.setup(blueprint.sprite, blueprint);
@@ -433,4 +435,21 @@ var BackGround = function () {
 
 BackGround.prototype = new Sprite();
 BackGround.prototype.type = OBJECT_BOARD;
+
+//LOGO
+var Logo = function () {
+
+  this.setup('logo', {
+    x: Game.width/2 -160,
+    y: Game.height/2 - 200,
+  });
+
+  this.step = function (dt) {
+  }
+
+}
+
+Logo.prototype = new Sprite();
+Logo.prototype.type = OBJECT_BOARD;
+
 
