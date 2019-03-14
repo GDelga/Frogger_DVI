@@ -9,7 +9,8 @@ var sprites = {
   tronco_mediano: {sx: 10, sy: 123, w:92 , h: 52 , frames: 1},
   tronco_pequeno: {sx: 270, sy: 173, w:130 , h: 50 , frames: 1},
   tronco_grande: {sx: 9, sy: 171, w:92 , h: 60 , frames: 1},
-  waters_malas:{sx:247,sy:480,w:550,h:242, frames: 1}
+  waters_malas:{sx:247,sy:480,w:550,h:242, frames: 1},
+  death: {sx:354 , sy:125 , w:52 , h:39, frames:1 }
 };
 
 var OBJECT_PLAYER = 1,
@@ -106,6 +107,8 @@ PlayerFrog.prototype.hit = function (damage) {
   console.log("colision rana");
   
   if (this.board.remove(this)) {
+  	this.board.add(new Death(this.x + this.w/2, 
+                                   this.y + this.h/2));
     loseGame();
   }
 
@@ -235,6 +238,20 @@ Water.prototype.step = function (dt) {
       
   }
 }
+
+///// MUERTE DE LA RANA
+
+var Death = function(centerX,centerY) {
+  this.setup('death', { frame: 0 });
+  this.x = centerX - this.w/2;
+  this.y = centerY - this.h/2;
+  this.subFrame = 0;
+};
+
+Death.prototype = new Sprite();
+
+Death.prototype.step = function(dt) {
+};
 
 
 /*Car.prototype.hit = function (damage) {
