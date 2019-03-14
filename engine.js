@@ -71,7 +71,8 @@ var Game = new function() {
 
       // y actualizamos y dibujamos todas las entidades
       for(var i=0,len = boards.length;i<len;i++) {
-        if(boards[i]) { 
+        if(boards[i]) {
+         // console.log("llego numero "+ i); 
           boards[i].step(dt);
           boards[i].draw(Game.ctx);
         }

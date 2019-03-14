@@ -10,7 +10,8 @@ var sprites = {
   tronco_pequeno: {sx: 270, sy: 173, w:130 , h: 50 , frames: 1},
   tronco_grande: {sx: 9, sy: 171, w:92 , h: 60 , frames: 1},
   waters_malas:{sx:247,sy:480,w:550,h:242, frames: 1},
-  turtle:{sx:281,sy:344,w:50,h:43, frames: 1}
+  turtle:{sx:281,sy:344,w:50,h:43, frames: 1},
+  spawn: {sx:1,sy:1,w:1,h:1, frames: 1}
 };
 
 var OBJECT_PLAYER = 1,
@@ -190,7 +191,8 @@ var enemies = {
   }
 };
 
-var objetos = {
+// Objetos del agua, tales como la tortuga, los diferentes tipos de troncos
+var objetos_agua = {
   tortuga: {
     x: 0, y: 200, sprite: 'turtle', health: 10, V: 10
   },
@@ -414,4 +416,67 @@ var BackGround = function () {
 
 BackGround.prototype = new Sprite();
 BackGround.prototype.type = OBJECT_BOARD;
+
+
+//var nombreCoches = ['camion_marron', 'coche_bomberos', 'coche_amarillo', 'coche_verde', 'coche_azul'];
+
+// Array de todos los objetos del juego
+/*
+Definicion de atributos de cada patron:
+inicio:     Sera el tiempo en el que saldra el objeto
+intervalo:  Sera el tiempo que se le sumara al "inicio" y que tendra que esperar el objeto para ser llamado
+campo:      Para disntiguir entre los objetos de la carretera y del agua (se podria unificar todos en un mismo array)
+tipo:       Para llamar al objeto dentro de su array de objetos
+*/
+var patrones = [
+  // Patrones de los coches
+  {inicio: 0, intervalo: 6, campo: 0, tipo: 'camion_marron'},   // Camion marron
+  {inicio: 0, intervalo: 4, campo: 0, tipo: 'coche_bomberos'},  // Ambulancia
+  {inicio: 0, intervalo: 5, campo: 0, tipo: 'coche_amarillo'},  // Coche amarillo
+  {inicio: 0, intervalo: 3.5, campo: 0, tipo: 'coche_verde'},   // Coche verde
+  {inicio: 0, intervalo: 5, campo: 0, tipo: 'coche_azul'},      // Coche azul
+  // Aqui vienen los patrones del agua
+  {inicio: 0, intervalo: 5, campo: 1, tipo: 'tortuga'},         // Tortuga
+  {inicio: 0, intervalo: 4, campo: 1, tipo: 'tronco_pequeno'}   // Tronco pequeño
+  // Faltan por hacer asi que no los meto
+  /*{inicio: 0, intervalo: 4, campo: 1, tipo: 'tronco_medio'}   // Tronco medio
+  {inicio: 0, intervalo: 4, campo: 1, tipo: 'tronco_grande'}*/  // Tronco grande
+]
+
+// Clase que metera los objetos del juego continuamente en la pantalla
+var Spawner = function () {
+  console.log("Se mete en Spawner");
+  // Inicializo t, que sera la variable que cuenta el tiempo para pintar un objeto y el siguiente
+  this.t = 0;
+}
+
+Spawner.prototype.step = function (dt) {
+  // Le sumo el tiempo transcurrido
+  this.t += dt;
+  // Me recorro el array de PATRONES 
+  for(var i = 0; i < patrones.length; i++){
+    // Miro si puedo pintar ese PATRON
+    if(this.t > patrones[i].inicio){
+      // Le sumo el intervalo que tendra que esperar para volver a ser pintado
+      patrones[i].inicio += patrones[i].intervalo;
+      var campo = patrones[i].campo;
+      // Su campo es la carretera
+      if(campo == 0){
+        // Lo añado al tablero
+        var coche = cars[patrones[i].tipo];
+        this.board.add(new Car(coche));
+      }
+      // Su campo es el agua
+      else if (campo == 1){
+        // Lo añado al tablero
+        this.board.add(new Trunk(objetos_agua[patrones[i].tipo]));
+      }
+      
+    }
+  }
+
+
+}
+// Para sobre escribir la funcion del padre y que no pinta nada
+Spawner.prototype.draw = function () {};
 

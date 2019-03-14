@@ -18,17 +18,19 @@ var playGame = function() {
   // Añado al board los elementos que necesitara
   board.add(new BackGround());
 
- 
-  board.add(new Car(cars['camion_marron']));
+  board.add(new Spawner());
+ /* board.add(new Car(cars['camion_marron']));
   board.add(new Car(cars['coche_bomberos']));
   board.add(new Car(cars['coche_verde']));
   board.add(new Car(cars['coche_azul']));
-  board.add(new Car(cars['coche_amarillo']));
-
-  board.add(new Trunk(objetos['tronco_pequeno']));
-  board.add(new Turtle(objetos['tortuga']));
+  board.add(new Car(cars['coche_amarillo']));*/
+ 
+  /*board.add(new Trunk(objetos_agua['tronco_pequeno']));
+  board.add(new Turtle(objetos_agua['tortuga']));*/
   board.add(new Water(cars['waters_malas']));
+  
   board.add(new PlayerFrog());
+
   
   //Agua rana y tronco
   Game.setBoard(0,board);
