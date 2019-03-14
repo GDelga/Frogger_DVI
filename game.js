@@ -15,13 +15,27 @@ var startGame = function() {
 
 var playGame = function() {
 
-  //Game.setBoard(0,new Backgroundfield());
-
   var board = new GameBoard();
-  // Añado al board los elementos que necesitara
   board.add(new BackGround());
-
+  Game.setBoard(0, board);
+  
+  var board = new GameBoard();
+  board.add(new Water(cars['waters_malas']));
+  board.add(new PlayerFrog());
   board.add(new Spawner());
+  Game.setBoard(1, board);
+  
+  
+  /*board.add(new PlayerFrog());
+  board.add(new Spawner());
+  board.add(new Water(cars['waters_malas']));
+  Game.setBoard(1, board); */
+
+  //board.add(new BackGround());
+  // Añado al board los elementos que necesitara
+  
+
+  
  /* board.add(new Car(cars['camion_marron']));
   board.add(new Car(cars['coche_bomberos']));
   board.add(new Car(cars['coche_verde']));
@@ -30,13 +44,12 @@ var playGame = function() {
  
   /*board.add(new Trunk(objetos_agua['tronco_pequeno']));
   board.add(new Turtle(objetos_agua['tortuga']));*/
-  board.add(new Water(cars['waters_malas']));
   
-  board.add(new PlayerFrog());
+ 
 
   
   //Agua rana y tronco
-  Game.setBoard(0,board);
+ // Game.setBoard(0,board);
 }
 
 var winGame = function() {
