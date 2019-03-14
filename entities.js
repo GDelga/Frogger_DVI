@@ -169,8 +169,6 @@ PlayerMissile.prototype.step = function (dt) {
   } else if (this.y < -this.h) {
     this.board.remove(this);
   }
-
-
 };
 
 
@@ -247,7 +245,6 @@ Trunk.prototype.step = function (dt) {
 
 }
 
-
 // Array con todos los vehiculos del juego
 var cars = {
   camion_marron: {
@@ -265,10 +262,12 @@ var cars = {
   coche_amarillo: {
     x: 12, y: 379, sprite: 'coche_amarillo', health: 10, V: 250
   },
+  // Menos este que no se que hace ahi
   waters_malas:{
     x: 0, y: 49, sprite: 'waters_malas', health: 10
   }
 };
+
 
 
 
@@ -394,3 +393,4 @@ var BackGround = function () {
 
 BackGround.prototype = new Sprite();
 BackGround.prototype.type = OBJECT_BOARD;
+
