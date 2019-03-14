@@ -11,6 +11,7 @@ var sprites = {
   tronco_grande: {sx: 9, sy: 171, w:92 , h: 60 , frames: 1},
   waters_malas:{sx:247,sy:480,w:550,h:242, frames: 1},
   death: {sx:354 , sy:125 , w:52 , h:39, frames:1 }
+  turtle:{sx:281,sy:344,w:50,h:43, frames: 1}
 };
 
 var OBJECT_PLAYER = 1,
@@ -58,6 +59,7 @@ var PlayerFrog = function () {
   this.x = Game.width / 2 -20 - this.w / 2;
   this.y = Game.height - this.h -10;
   this.onTrunkIndicatorB = false;
+  this.onTurtleB = false;
 
   this.reload = this.reloadTime;
 
@@ -66,10 +68,12 @@ var PlayerFrog = function () {
     console.log(this.vx);
     this.onTrunkIndicatorB = true;
   }
-
-  this.onTrunkIndicator = function(){
-    return this.onTrunkIndicatorB;
+  this.onTurtle = function (vt){
+    this.vx = vt;
+    console.log(this.vx);
+    this.onTurtleB = true;
   }
+
   this.step = function (dt) {
     //Movimiento a izquierda y derecha
     if(this.onTrunkIndicatorB){
@@ -96,6 +100,7 @@ var PlayerFrog = function () {
   }
   this.vx = 0;
   this.onTrunkIndicatorB = false;
+  this.onTurtleB = false;
   }
 
 }
@@ -115,9 +120,82 @@ PlayerFrog.prototype.hit = function (damage) {
 
 }
 
+///// EXPLOSION
+
+var Explosion = function (centerX, centerY) {
+  this.setup('explosion', { frame: 0 });
+  this.x = centerX - this.w / 2;
+  this.y = centerY - this.h / 2;
+  this.subFrame = 0;
+};
+
+Explosion.prototype = new Sprite();
+
+Explosion.prototype.step = function (dt) {
+  this.frame = Math.floor(this.subFrame++ / 3);
+  if (this.subFrame >= 36) {
+    this.board.remove(this);
+  }
+};
+
+
+
+/// Player Missile
+
+
+var PlayerMissile = function (x, y) {
+  this.setup('missile', { vy: -700, damage: 10 });
+  this.x = x - this.w / 2;
+  this.y = y - this.h;
+};
+
+PlayerMissile.prototype = new Sprite();
+PlayerMissile.prototype.type = OBJECT_PLAYER_PROJECTILE;
+
+
+PlayerMissile.prototype.step = function (dt) {
+  this.y += this.vy * dt;
+  if (this.y < -this.h) { this.board.remove(this); }
+
+  var collision = this.board.collide(this, OBJECT_ENEMY);
+  if (collision) {
+    collision.hit(this.damage);
+    this.board.remove(this);
+  } else if (this.y < -this.h) {
+    this.board.remove(this);
+  }
+};
+
+
+
+/// ENEMIES
+
+var enemies = {
+  straight: {
+    x: 0, y: -50, sprite: 'enemy_ship', health: 10,
+    E: 100
+  },
+  ltr: {
+    x: 0, y: -100, sprite: 'enemy_purple', health: 10,
+    B: 200, C: 1, E: 200
+  },
+  circle: {
+    x: 400, y: -50, sprite: 'enemy_circle', health: 10,
+    A: 0, B: -200, C: 1, E: 20, F: 200, G: 1, H: Math.PI / 2
+  },
+  wiggle: {
+    x: 100, y: -50, sprite: 'enemy_bee', health: 20,
+    B: 100, C: 4, E: 100
+  },
+  step: {
+    x: 0, y: -50, sprite: 'enemy_circle', health: 10,
+    B: 300, C: 1.5, E: 60
+  }
+};
+
 var objetos = {
   tortuga: {
-    x: 400, y: 527, sprite: 'tortuga', health: 10, V: -100
+    x: 0, y: 200, sprite: 'turtle', health: 10, V: 10
   },
   tronco_pequeno: {
     x: 400, y: 248, sprite: 'tronco_pequeno', health: 10, V: -50
@@ -141,8 +219,6 @@ Trunk.prototype.step = function (dt) {
   this.t += dt;
   this.vx = this.V;
   this.vy = 0;
-  //this.vx = this.A + this.B * Math.sin(this.C * this.t + this.D);
-  //this.vy = this.E + this.F * Math.sin(this.G * this.t + this.H);
   this.x += this.vx * dt;
   this.y += this.vy * dt;
   if (this.y > Game.height ||
@@ -154,15 +230,39 @@ Trunk.prototype.step = function (dt) {
 
   var collision = this.board.collide(this, OBJECT_PLAYER);
   if (collision) {
-    //collision.hit(this.damage);
     console.log("colision con tronco");
     collision.onTrunk(-50);
-
-    //this.board.remove(this);
   }
 
 }
+var Turtle = function (blueprint) {
+  console.log("setup");
+  this.setup(blueprint.sprite, blueprint);
 
+}
+Turtle.prototype = new Sprite();
+Turtle.prototype.type = OBJECT_POWERUP;
+
+Turtle.prototype.step = function (dt) {
+  this.t += dt;
+  this.vx = this.V;
+  this.vy = 0;
+  this.x += this.vx * dt;
+  this.y += this.vy * dt;
+  if (this.y > Game.height ||
+    this.x < -this.w ||
+    this.x > Game.width) {
+    console.log("remove");
+    this.board.remove(this);
+  }
+
+  var collision = this.board.collide(this, OBJECT_PLAYER);
+  if (collision) {
+    console.log("colision con tortuga");
+    collision.onTurtle(-100);
+  }
+
+}
 
 // Array con todos los vehiculos del juego
 var cars = {
@@ -181,10 +281,12 @@ var cars = {
   coche_amarillo: {
     x: 12, y: 379, sprite: 'coche_amarillo', health: 10, V: 250
   },
+  // Menos este que no se que hace ahi
   waters_malas:{
     x: 0, y: 49, sprite: 'waters_malas', health: 10
   }
 };
+
 
 
 
@@ -231,7 +333,9 @@ Water.prototype.step = function (dt) {
   var collision = this.board.collide(this, OBJECT_PLAYER);
   if (collision) {
     console.log(collision.onTrunkIndicatorB);
-    if(!collision.onTrunkIndicatorB){
+    console.log(collision.onTurtleB);
+    console.log("estoy aqui");
+    if(!collision.onTrunkIndicatorB && !collision.onTurtleB){
       console.log("colision con agua");
       collision.hit(this.damage);
     }
@@ -327,3 +431,4 @@ var BackGround = function () {
 
 BackGround.prototype = new Sprite();
 BackGround.prototype.type = OBJECT_BOARD;
+

@@ -17,13 +17,16 @@ var playGame = function() {
   var board = new GameBoard();
   // Añado al board los elementos que necesitara
   board.add(new BackGround());
+
  
   board.add(new Car(cars['camion_marron']));
   board.add(new Car(cars['coche_bomberos']));
   board.add(new Car(cars['coche_verde']));
   board.add(new Car(cars['coche_azul']));
   board.add(new Car(cars['coche_amarillo']));
+
   board.add(new Trunk(objetos['tronco_pequeno']));
+  board.add(new Turtle(objetos['tortuga']));
   board.add(new Water(cars['waters_malas']));
   board.add(new PlayerFrog());
   
