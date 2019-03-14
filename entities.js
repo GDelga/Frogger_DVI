@@ -9,7 +9,8 @@ var sprites = {
   tronco_mediano: {sx: 10, sy: 123, w:92 , h: 52 , frames: 1},
   tronco_pequeno: {sx: 270, sy: 173, w:130 , h: 50 , frames: 1},
   tronco_grande: {sx: 9, sy: 171, w:92 , h: 60 , frames: 1},
-  waters_malas:{sx:247,sy:480,w:550,h:242, frames: 1}
+  waters_malas:{sx:247,sy:480,w:550,h:242, frames: 1},
+  turtle:{sx:281,sy:344,w:50,h:43, frames: 1}
 };
 
 var OBJECT_PLAYER = 1,
@@ -57,6 +58,7 @@ var PlayerFrog = function () {
   this.x = Game.width / 2 -20 - this.w / 2;
   this.y = Game.height - this.h -10;
   this.onTrunkIndicatorB = false;
+  this.onTurtleB = false;
 
   this.reload = this.reloadTime;
 
@@ -65,10 +67,12 @@ var PlayerFrog = function () {
     console.log(this.vx);
     this.onTrunkIndicatorB = true;
   }
-
-  this.onTrunkIndicator = function(){
-    return this.onTrunkIndicatorB;
+  this.onTurtle = function (vt){
+    this.vx = vt;
+    console.log(this.vx);
+    this.onTurtleB = true;
   }
+
   this.step = function (dt) {
     //Movimiento a izquierda y derecha
     if(this.onTrunkIndicatorB){
@@ -95,6 +99,7 @@ var PlayerFrog = function () {
   }
   this.vx = 0;
   this.onTrunkIndicatorB = false;
+  this.onTurtleB = false;
   }
 
 }
@@ -114,7 +119,7 @@ PlayerFrog.prototype.hit = function (damage) {
 
 var objetos = {
   tortuga: {
-    x: 400, y: 527, sprite: 'tortuga', health: 10, V: -100
+    x: 0, y: 200, sprite: 'turtle', health: 10, V: 10
   },
   tronco_pequeno: {
     x: 400, y: 248, sprite: 'tronco_pequeno', health: 10, V: -50
@@ -138,8 +143,6 @@ Trunk.prototype.step = function (dt) {
   this.t += dt;
   this.vx = this.V;
   this.vy = 0;
-  //this.vx = this.A + this.B * Math.sin(this.C * this.t + this.D);
-  //this.vy = this.E + this.F * Math.sin(this.G * this.t + this.H);
   this.x += this.vx * dt;
   this.y += this.vy * dt;
   if (this.y > Game.height ||
@@ -151,11 +154,36 @@ Trunk.prototype.step = function (dt) {
 
   var collision = this.board.collide(this, OBJECT_PLAYER);
   if (collision) {
-    //collision.hit(this.damage);
     console.log("colision con tronco");
     collision.onTrunk(-50);
+  }
 
-    //this.board.remove(this);
+}
+var Turtle = function (blueprint) {
+  console.log("setup");
+  this.setup(blueprint.sprite, blueprint);
+
+}
+Turtle.prototype = new Sprite();
+Turtle.prototype.type = OBJECT_POWERUP;
+
+Turtle.prototype.step = function (dt) {
+  this.t += dt;
+  this.vx = this.V;
+  this.vy = 0;
+  this.x += this.vx * dt;
+  this.y += this.vy * dt;
+  if (this.y > Game.height ||
+    this.x < -this.w ||
+    this.x > Game.width) {
+    console.log("remove");
+    this.board.remove(this);
+  }
+
+  var collision = this.board.collide(this, OBJECT_PLAYER);
+  if (collision) {
+    console.log("colision con tortuga");
+    collision.onTurtle(-100);
   }
 
 }
@@ -228,7 +256,9 @@ Water.prototype.step = function (dt) {
   var collision = this.board.collide(this, OBJECT_PLAYER);
   if (collision) {
     console.log(collision.onTrunkIndicatorB);
-    if(!collision.onTrunkIndicatorB){
+    console.log(collision.onTurtleB);
+    console.log("estoy aqui");
+    if(!collision.onTrunkIndicatorB && !collision.onTurtleB){
       console.log("colision con agua");
       collision.hit(this.damage);
     }

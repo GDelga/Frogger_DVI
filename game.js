@@ -24,6 +24,7 @@ var playGame = function() {
   board.add(new Car(cars['coche_azul']));
   board.add(new Car(cars['coche_amarillo']));
   board.add(new Trunk(objetos['tronco_pequeno']));
+  board.add(new Turtle(objetos['tortuga']));
   board.add(new Water(cars['waters_malas']));
   board.add(new PlayerFrog());
   
