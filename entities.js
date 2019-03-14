@@ -1,4 +1,5 @@
 var sprites = {
+  logo: { sx: 48, sy: 400, w: 304, h: 225, frames: 1},
   frog: { sx: 0 , sy: 344, w: 34, h: 28, frames: 1 },
   fondo: { sx: 422, sy: 0, w: 550, h: 625, frames: 1 },
   camion_marron: {sx: 148, sy: 62, w: 180 , h: 45, frames: 1},
@@ -10,8 +11,8 @@ var sprites = {
   tronco_pequeno: {sx: 270, sy: 173, w:130 , h: 50 , frames: 1},
   tronco_grande: {sx: 9, sy: 171, w:92 , h: 60 , frames: 1},
   waters_malas:{sx:247,sy:480,w:550,h:242, frames: 1},
-  turtle:{sx:281,sy:344,w:50,h:43, frames: 1},
-  spawn: {sx:1,sy:1,w:1,h:1, frames: 1}
+  death: {sx:354 , sy:125 , w:52 , h:39, frames:1 },
+  turtle:{sx:281,sy:344,w:50,h:43, frames: 1}
 };
 
 var OBJECT_PLAYER = 1,
@@ -75,12 +76,16 @@ var PlayerFrog = function () {
   }
 
   this.step = function (dt) {
-    //Movimiento a izquierda y derecha
+    
     if(this.onTrunkIndicatorB){
       this.x += this.vx * dt;
       console.log("ahora me debería mover");
-      //this.onTrunkIndicatorB = false;
     }
+    if(this.onTurtleB){
+      this.x += this.vx * dt;
+      console.log("estoy en la tortuga");
+    }
+    //Movimiento a izquierda y derecha
     if(Game.pulsado == false) {
 	    if (Game.keys['left']) { this.x -= 40; Game.pulsado = true; }
 	    else if (Game.keys['right']) { this.x += 40; Game.pulsado = true;}
@@ -112,6 +117,8 @@ PlayerFrog.prototype.hit = function (damage) {
   console.log("colision rana");
   
   if (this.board.remove(this)) {
+  	this.board.add(new Death(this.x + this.w/2, 
+                                   this.y + this.h/2));
     loseGame();
   }
 
@@ -206,6 +213,7 @@ var objetos_agua = {
 
   }
 };
+
 var Trunk = function (blueprint) {
   console.log("setup");
   this.setup(blueprint.sprite, blueprint);
@@ -230,7 +238,7 @@ Trunk.prototype.step = function (dt) {
   var collision = this.board.collide(this, OBJECT_PLAYER);
   if (collision) {
     console.log("colision con tronco");
-    collision.onTrunk(-50);
+    collision.onTrunk(this.V);
   }
 
 }
@@ -258,7 +266,7 @@ Turtle.prototype.step = function (dt) {
   var collision = this.board.collide(this, OBJECT_PLAYER);
   if (collision) {
     console.log("colision con tortuga");
-    collision.onTurtle(-100);
+    collision.onTurtle(this.V);
   }
 
 }
@@ -300,8 +308,6 @@ Car.prototype.step = function (dt) {
   this.t += dt;
   this.vx = this.V;
   this.vy = 0;
-  //this.vx = this.A + this.B * Math.sin(this.C * this.t + this.D);
-  //this.vy = this.E + this.F * Math.sin(this.G * this.t + this.H);
   this.x += this.vx * dt;
   this.y += this.vy * dt;
   if (this.y > Game.height ||
@@ -341,6 +347,19 @@ Water.prototype.step = function (dt) {
       
   }
 }
+
+///// MUERTE DE LA RANA
+
+var Death = function(centerX,centerY) {
+  this.setup('death', { frame: 0 });
+  this.x = centerX - this.w/2;
+  this.y = centerY - this.h/2;
+};
+
+Death.prototype = new Sprite();
+
+Death.prototype.step = function(dt) {
+};
 
 
 /*Car.prototype.hit = function (damage) {
@@ -417,7 +436,6 @@ var BackGround = function () {
 BackGround.prototype = new Sprite();
 BackGround.prototype.type = OBJECT_BOARD;
 
-
 //var nombreCoches = ['camion_marron', 'coche_bomberos', 'coche_amarillo', 'coche_verde', 'coche_azul'];
 
 // Array de todos los objetos del juego
@@ -479,4 +497,22 @@ Spawner.prototype.step = function (dt) {
 }
 // Para sobre escribir la funcion del padre y que no pinta nada
 Spawner.prototype.draw = function () {};
+
+//LOGO
+var Logo = function () {
+
+  this.setup('logo', {
+    x: Game.width/2 -160,
+    y: Game.height/2 - 200,
+  });
+
+  this.step = function (dt) {
+  }
+
+}
+
+Logo.prototype = new Sprite();
+Logo.prototype.type = OBJECT_BOARD;
+
+
 

@@ -3,9 +3,12 @@
 
 // Especifica lo que se debe pintar al cargar el juego
 var startGame = function() {
-  Game.setBoard(0,new TitleScreen("Alien Invasion", 
-                                  "Press fire to start playing",
+  var board = new GameBoard();
+  board.add (new TitleScreen("", 
+                                  "Press space to start",
                                   playGame));
+  board.add (new Logo());
+  Game.setBoard(0, board);
 }
 
 
@@ -56,5 +59,5 @@ var loseGame = function() {
 // y este después de realizar la inicialización llamará a
 // startGame
 window.addEventListener("load", function() {
-  Game.initialize("game",sprites,playGame);
+  Game.initialize("game",sprites,startGame);
 });
