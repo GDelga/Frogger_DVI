@@ -75,12 +75,16 @@ var PlayerFrog = function () {
   }
 
   this.step = function (dt) {
-    //Movimiento a izquierda y derecha
+    
     if(this.onTrunkIndicatorB){
       this.x += this.vx * dt;
       console.log("ahora me debería mover");
-      //this.onTrunkIndicatorB = false;
     }
+    if(this.onTurtleB){
+      this.x += this.vx * dt;
+      console.log("estoy en la tortuga");
+    }
+    //Movimiento a izquierda y derecha
     if(Game.pulsado == false) {
 	    if (Game.keys['left']) { this.x -= 40; Game.pulsado = true; }
 	    else if (Game.keys['right']) { this.x += 40; Game.pulsado = true;}
@@ -231,7 +235,7 @@ Trunk.prototype.step = function (dt) {
   var collision = this.board.collide(this, OBJECT_PLAYER);
   if (collision) {
     console.log("colision con tronco");
-    collision.onTrunk(-50);
+    collision.onTrunk(this.V);
   }
 
 }
@@ -259,7 +263,7 @@ Turtle.prototype.step = function (dt) {
   var collision = this.board.collide(this, OBJECT_PLAYER);
   if (collision) {
     console.log("colision con tortuga");
-    collision.onTurtle(-100);
+    collision.onTurtle(this.V);
   }
 
 }
@@ -301,8 +305,6 @@ Car.prototype.step = function (dt) {
   this.t += dt;
   this.vx = this.V;
   this.vy = 0;
-  //this.vx = this.A + this.B * Math.sin(this.C * this.t + this.D);
-  //this.vy = this.E + this.F * Math.sin(this.G * this.t + this.H);
   this.x += this.vx * dt;
   this.y += this.vy * dt;
   if (this.y > Game.height ||
