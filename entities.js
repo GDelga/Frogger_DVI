@@ -1,6 +1,6 @@
 var sprites = {
   logo: { sx: 48, sy: 400, w: 304, h: 225, frames: 1},
-  frog: { sx: 0 , sy: 344, w: 34, h: 28, frames: 1 },
+  frog: { sx: 0 , sy: 344, w: 40, h: 42, frames: 6 },
   fondo: { sx: 422, sy: 0, w: 550, h: 625, frames: 1 },
   camion_marron: {sx: 148, sy: 62, w: 180 , h: 45, frames: 1},
   coche_bomberos: {sx: 7, sy: 62, w: 122, h: 45, frames: 1},
@@ -55,14 +55,16 @@ Sprite.prototype.hit = function (damage) {
 
 var PlayerFrog = function () {
 
-  this.setup('frog', { vx: 0, vy: 0, frame: 0, reloadTime: 0.25, maxVel: 1 });
+  this.setup('frog', { vx: 0, vy: 0, frame: 0, maxVel: 1 });
 
   this.x = Game.width / 2 -20 - this.w / 2;
-  this.y = Game.height - this.h -10;
+  this.y = Game.height - this.h;
   this.onTrunkIndicatorB = false;
   this.onTurtleB = false;
+  this.subFrame = 0;
+  this.jumping = false;
 
-  this.reload = this.reloadTime;
+  this.tiempo = 0;
 
   this.onTrunk = function (vt) {
     this.vx = vt;
@@ -76,7 +78,21 @@ var PlayerFrog = function () {
   }
 
   this.step = function (dt) {
-    
+    this.tiempo += dt;
+    //Si esta saltando hace la animación de saltar
+    if(this.jumping){
+      //Calcula el tiempo para cada frame y si ya ha terminado la animacion
+      if(this.tiempo > 0.1 && this.subFrame < 6){
+        this.frame = this.subFrame++;
+        this.tiempo = 0;
+      }
+      //Si ya ha terminado la animación resetea los valores
+      else if(this.subFrame === 6){
+        this.subFrame = 0;
+        this.frame = this.subFrame;
+        this.jumping = false;
+      }
+    }
     if(this.onTrunkIndicatorB){
       this.x += this.vx * dt;
       console.log("ahora me debería mover");
@@ -95,8 +111,8 @@ var PlayerFrog = function () {
 	      this.x = Game.width - this.w;
 	    }
 	    //Movimiento arriba y abajo
-	    if (Game.keys['down']) { this.y += 48; Game.pulsado = true; }
-	    else if (Game.keys['up']) { this.y -= 48; Game.pulsado = true; }
+	    if (Game.keys['down']) { this.y += 48; Game.pulsado = true; this.jumping = true; this.frame = this.subFrame++;}
+	    else if (Game.keys['up']) { this.y -= 48; Game.pulsado = true; this.jumping = true; this.frame = this.subFrame++;}
 	    else { this.y += 0; }
 	    if (this.y < 0) { this.y = 0; }
 	    else if (this.y > Game.height - this.h) {
