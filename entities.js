@@ -12,7 +12,7 @@ var sprites = {
   tronco_grande: {sx: 9, sy: 171, w:92 , h: 60 , frames: 1},
   waters_malas:{sx:247,sy:480,w:550,h:242, frames: 1},
   death: {sx:354 , sy:125 , w:52 , h:39, frames:1 },
-  turtle:{sx:281,sy:344,w:50,h:43, frames: 1}
+  turtle:{sx:5,sy:288,w:51,h:43, frames: 7}
 };
 
 var OBJECT_PLAYER = 1,
@@ -156,7 +156,7 @@ PlayerFrog.prototype.hit = function (damage) {
 // Objetos del agua, tales como la tortuga, los diferentes tipos de troncos
 var objetos_agua = {
   tortuga: {
-    x: 0, y: 200, sprite: 'turtle', health: 10, V: 10
+    x: 0, y: 200, sprite: 'turtle', health: 10, V: 20, frame: 0
   },
   tronco_pequeno: {
     x: 400, y: 248, sprite: 'tronco_pequeno', health: 10, V: -50
@@ -183,6 +183,7 @@ Trunk.prototype.step = function (dt) {
   this.vy = 0;
   this.x += this.vx * dt;
   this.y += this.vy * dt;
+  this.tiempo = 0;
   if (this.y > Game.height ||
     this.x < -this.w ||
     this.x > Game.width) {
@@ -198,14 +199,42 @@ Trunk.prototype.step = function (dt) {
 
 }
 var Turtle = function (blueprint) {
+  //this.setup('frog', { vx: 0, vy: 0, frame: 0, maxVel: 1 });
   console.log("setup");
   this.setup(blueprint.sprite, blueprint);
+  this.subFrame = 0;
+  this.tiempo = 0;
+  this.buceo = true;
 
 }
 Turtle.prototype = new Sprite();
 Turtle.prototype.type = OBJECT_POWERUP;
 
 Turtle.prototype.step = function (dt) {
+  //Animacion de la tortuga
+  console.log("animacion de la tortuga, frame " + this.frame );
+  this.tiempo += dt;
+  console.log("tiempo " + this.tiempo + " buceo " + this.buceo );
+  if(this.tiempo > 0.1 && this.buceo){
+    console.log("entro");
+    if(this.subFrame === 7) this.buceo = false;
+    else{
+      console.log("entro");
+      this.frame = this.subFrame++;
+      this.tiempo = 0;
+    }
+  }
+  else if(this.tiempo > 0.3 && !this.buceo){
+    console.log("entro");
+    if(this.subFrame === 0) this.buceo = true;
+    else{
+      console.log("entro");
+      this.frame = this.subFrame--;
+      this.tiempo = 0;
+    }
+  }
+
+
   this.t += dt;
   this.vx = this.V;
   this.vy = 0;
@@ -214,7 +243,7 @@ Turtle.prototype.step = function (dt) {
   if (this.y > Game.height ||
     this.x < -this.w ||
     this.x > Game.width) {
-    console.log("remove");
+    console.log("remove turtle");
     this.board.remove(this);
   }
 
@@ -371,7 +400,8 @@ Spawner.prototype.step = function (dt) {
       // Su campo es el agua
       else if (campo == 1){
         // Lo añado al tablero
-        this.board.add(new Trunk(objetos_agua[patrones[i].tipo]));
+        if(i === 5) this.board.add(new Turtle(objetos_agua[patrones[i].tipo]));
+        else this.board.add(new Trunk(objetos_agua[patrones[i].tipo]));
       }
       
     }
