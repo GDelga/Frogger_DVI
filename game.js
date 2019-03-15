@@ -12,6 +12,7 @@ var startGame = function() {
   //PONEMOS LAS VIDAS
   var board = new GameBoard();
   board.add(new Lives(5));
+  board.add(new Points(0));
   Game.setBoard(2, board);
 }
 
@@ -34,25 +35,27 @@ var playGame = function() {
 }
 
 //CUANDO EL JUGADOR GANA
-var winGame = function() {
-  Game.setBoard(3,new TitleScreen("You win!", 
-                                  "Press fire to play again",
+var winGame = function(points) {
+  Game.setBoard(3,new TitleScreen("You win! You have " + (points + 100) + "points now!", 
+                                  "Press fire to continue",
                                   playGame));
   //INICIALIZAMOS LAS VIDAS PARA LA SIGUIENTE PARTIDA
   var board = new GameBoard();
   board.add(new Lives(5));
+  board.add(new Points(points + 100));
   Game.setBoard(2, board);
 };
 
 
 //CUANDO EL JUGADOR PIERDE UNA PARTIDA ENTERA
-var loseGame = function() {
-  Game.setBoard(3,new TitleScreen("You lose!", 
+var loseGame = function(points) {
+  Game.setBoard(3,new TitleScreen("You lose! You have " + points + " points", 
                                   "Press fire to play again",
                                   playGame));
   //INICIALIZAMOS LAS VIDAS PARA LA SIGUIENTE PARTIDA
   var board = new GameBoard();
   board.add(new Lives(5));
+  board.add(new Points(0));
   Game.setBoard(2, board);
 };
 

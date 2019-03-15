@@ -96,6 +96,7 @@ var PlayerFrog = function () {
         if(this.up === true) {
         	this.y -= 48;
         	this.up = false;
+        	Points.puntos += 10;
         }
         else if(this.down === true) {
         	this.y += 48;
@@ -129,6 +130,16 @@ var PlayerFrog = function () {
 	      this.y = Game.height - this.h;
 	    }
   }
+  var collision = this.board.collide(this, OBJECT_ENEMY);
+  var objeto = this.board.collide(this, OBJECT_POWERUP);
+  if(collision && !objeto){
+    //pierde
+    if (this.board.remove(this)) {
+      this.board.add(new Death(this.x + this.w/2, 
+                                     this.y + this.h/2));
+      Lives.muerte = true;
+    }
+   }
   //Si se ha acabado el tiempo la rana muere
   if(PlayerFrog.muerte === true) {
     	this.board.remove(this);
@@ -447,7 +458,7 @@ var Time = function() {
 	    Game.ctx.textAlign = "left";
 
 	    Game.ctx.font = "bold 16px arial";
-	    Game.ctx.fillText("Tiempo: " + Math.round(this.tiempoPartida),0,35);
+	    Game.ctx.fillText("Tiempo: " + Math.round(this.tiempoPartida),1,35);
   }
 }
 
@@ -461,7 +472,7 @@ var Lives = function(vidas) {
 		if (Lives.muerte === true) {
 			Lives.muerte = false;
 			this.vidas -= 1;
-			if(this.vidas == 0) loseGame(); //Si no quedan vidas fin de la partida
+			if(this.vidas == 0) loseGame(Points.puntos); //Si no quedan vidas fin de la partida
 			else loseLive(this.vidas); //Si quedan vidas reiniciamos el nivel
 		}
   	}
@@ -472,7 +483,26 @@ var Lives = function(vidas) {
 		    Game.ctx.textAlign = "left";
 
 		    Game.ctx.font = "bold 16px arial";
-		    Game.ctx.fillText("Vidas: " + this.vidas,0,50);
+		    Game.ctx.fillText("Vidas: " + this.vidas,1,55);
+		}
+  }
+}
+
+
+//PUNTOS
+var Points = function(puntos) {
+
+	Points.puntos = puntos;
+	this.step = function (dt) {
+  	}
+
+  	this.draw =  function(ctx){
+  		if(Game.started === true) { //Si el juego ha comenzado pintamos las vidas
+		    Game.ctx.fillStyle = "#FFFFFF";
+		    Game.ctx.textAlign = "left";
+
+		    Game.ctx.font = "bold 16px arial";
+		    Game.ctx.fillText("Puntos: " + Points.puntos,1,75);
 		}
   }
 }

@@ -131,7 +131,7 @@ var analytics = new function(){
     ctx.textAlign = "left";
 
     ctx.font = "bold 16px arial";
-    ctx.fillText("FPS: " + Math.round(fps),0,20);
+    ctx.fillText("FPS: " + Math.round(fps),0,15);
   }
 }
 
@@ -183,7 +183,7 @@ var TitleScreen = function TitleScreen(title,subtitle,callback) {
     ctx.fillStyle = "#FFFFFF";
     ctx.textAlign = "center";
 
-    ctx.font = "bold 40px bangers";
+    ctx.font = "bold 35px bangers";
     ctx.fillText(title,Game.width/2,Game.height/2);
 
     ctx.font = "bold 20px bangers";
