@@ -88,7 +88,7 @@ var PlayerFrog = function () {
         this.frame = this.subFrame++;
         this.tiempo = 0;
       }
-      //Si ya ha terminado la animación resetea los valores y haz el movimiento
+      //Si ya ha terminado la animación resetea los valores y hace el movimiento
       else if(this.subFrame === 6){
         this.subFrame = 0;
         this.frame = this.subFrame;
@@ -129,23 +129,13 @@ var PlayerFrog = function () {
 	      this.y = Game.height - this.h;
 	    }
   }
+  //Si se ha acabado el tiempo la rana muere
   if(PlayerFrog.muerte === true) {
     	this.board.remove(this);
     	this.board.add(new Death(this.x + this.w/2, 
                                      this.y + this.h/2));
-      loseGame();
+      	Lives.muerte = true;
   }
-  /*var collision = this.board.collide(this, OBJECT_ENEMY);
-  var objeto = this.board.collide(this, OBJECT_POWERUP);
-  if(collision && !objeto){
-    //pierde
-    if (this.board.remove(this)) {
-      this.board.add(new Death(this.x + this.w/2, 
-                                     this.y + this.h/2));
-      loseGame();
-    }
-  }*/
-
   this.vx = 0;
   this.onTrunkIndicatorB = false;
   this.onTurtleB = false;
@@ -156,12 +146,12 @@ var PlayerFrog = function () {
 PlayerFrog.prototype = new Sprite();
 PlayerFrog.prototype.type = OBJECT_PLAYER;
 
+//Si hay una colision la rana muere
 PlayerFrog.prototype.hit = function (damage) {
-  console.log("colision rana");
   if (this.board.remove(this)) {
   	this.board.add(new Death(this.x + this.w/2, 
                                    this.y + this.h/2));
-    loseGame();
+    Lives.muerte = true;
   }
 }
 
@@ -441,14 +431,15 @@ var Logo = function () {
 Logo.prototype = new Sprite();
 Logo.prototype.type = OBJECT_BOARD;
 
+//TIEMPO DE JUEGO
 var Time = function() {
 
-	this.tiempoPartida = 0;
+	this.tiempoPartida = 20;
 	this.step = function (dt) {
-		if (this.tiempoPartida >= 20) {
+		if (this.tiempoPartida <= 0) {//Quitamos una vida a la rana si se acaba el tiempo
 			PlayerFrog.muerte = true;
 		}
-		else this.tiempoPartida += dt;
+		else this.tiempoPartida -= dt;
   	}
 
   	this.draw =  function(ctx){
@@ -457,5 +448,31 @@ var Time = function() {
 
 	    Game.ctx.font = "bold 16px arial";
 	    Game.ctx.fillText("Tiempo: " + Math.round(this.tiempoPartida),0,35);
+  }
+}
+
+//VIDAS DE LA RANA
+var Lives = function(vidas) {
+
+	this.vidas = vidas;
+	Lives.muerte = false;
+	this.step = function (dt) {
+		//Si hay una muerte quitamos una vida
+		if (Lives.muerte === true) {
+			Lives.muerte = false;
+			this.vidas -= 1;
+			if(this.vidas == 0) loseGame(); //Si no quedan vidas fin de la partida
+			else loseLive(this.vidas); //Si quedan vidas reiniciamos el nivel
+		}
+  	}
+
+  	this.draw =  function(ctx){
+  		if(Game.started === true) { //Si el juego ha comenzado pintamos las vidas
+		    Game.ctx.fillStyle = "#FFFFFF";
+		    Game.ctx.textAlign = "left";
+
+		    Game.ctx.font = "bold 16px arial";
+		    Game.ctx.fillText("Vidas: " + this.vidas,0,50);
+		}
   }
 }

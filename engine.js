@@ -4,6 +4,10 @@ var Game = new function() {
   // se obtiene el canvas, se cargan los recursos y se llama a callback
   this.initialize = function(canvasElementId, sprite_data, callback) {
 
+    Game.started = false; // Para pintar las vidas cuando el juego comience
+
+    Game.pulsado = false; //Para que la rana no se mueva al mantener una tecla pulsada
+
     this.canvas = document.getElementById(canvasElementId)
     this.width = this.canvas.width;
     this.height= this.canvas.height;
@@ -27,7 +31,6 @@ var Game = new function() {
   var KEY_CODES = { 37:'left', 39:'right', 32 :'fire', 38:'up', 40: 'down' };
 
   this.keys = {};
-  this.pulsado = false;
 
   this.setupInput = function() {
     window.addEventListener('keydown',function(e) {
@@ -170,7 +173,10 @@ var TitleScreen = function TitleScreen(title,subtitle,callback) {
 
   this.step = function(dt) {
     if( ! Game.keys['fire'] ) up = true;
-    if( up && Game.keys['fire'] && callback ) callback();
+    if( up && Game.keys['fire'] && callback ) {
+      callback();
+      Game.started = true;
+    } 
   };
 
   this.draw = function(ctx) {

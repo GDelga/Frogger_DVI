@@ -9,10 +9,14 @@ var startGame = function() {
                                   playGame));
   board.add (new Logo());
   Game.setBoard(0, board);
+  //PONEMOS LAS VIDAS
+  var board = new GameBoard();
+  board.add(new Lives(5));
+  Game.setBoard(2, board);
 }
 
 
-
+//INICIALIZA EL JUEGO
 var playGame = function() {
 
   var board = new GameBoard();
@@ -25,46 +29,39 @@ var playGame = function() {
   board.add(new Spawner());
   board.add(new Time());
   Game.setBoard(1, board);
-  
-  
-  /*board.add(new PlayerFrog());
-  board.add(new Spawner());
-  board.add(new Water(cars['waters_malas']));
-  Game.setBoard(1, board); */
 
-  //board.add(new BackGround());
-  // Añado al board los elementos que necesitara
-  
-
-  
- /* board.add(new Car(cars['camion_marron']));
-  board.add(new Car(cars['coche_bomberos']));
-  board.add(new Car(cars['coche_verde']));
-  board.add(new Car(cars['coche_azul']));
-  board.add(new Car(cars['coche_amarillo']));*/
- 
-  /*board.add(new Trunk(objetos_agua['tronco_pequeno']));
-  board.add(new Turtle(objetos_agua['tortuga']));*/
-  
- 
-
-  
-  //Agua rana y tronco
- // Game.setBoard(0,board);
+  Game.setBoard(3, new GameBoard());
 }
 
+//CUANDO EL JUGADOR GANA
 var winGame = function() {
   Game.setBoard(3,new TitleScreen("You win!", 
                                   "Press fire to play again",
                                   playGame));
+  //INICIALIZAMOS LAS VIDAS PARA LA SIGUIENTE PARTIDA
+  var board = new GameBoard();
+  board.add(new Lives(5));
+  Game.setBoard(2, board);
 };
 
 
-
+//CUANDO EL JUGADOR PIERDE UNA PARTIDA ENTERA
 var loseGame = function() {
   Game.setBoard(3,new TitleScreen("You lose!", 
                                   "Press fire to play again",
                                   playGame));
+  //INICIALIZAMOS LAS VIDAS PARA LA SIGUIENTE PARTIDA
+  var board = new GameBoard();
+  board.add(new Lives(5));
+  Game.setBoard(2, board);
+};
+
+//CUANDO EL JUGADOR PIERDE UNA VIDA
+var loseLive = function(live) {
+  Game.setBoard(3,new TitleScreen("Now you have " + live + " lives!", 
+                                  "Press fire to continue",
+                                  playGame));
+  Game.setBoard();
 };
 
 
