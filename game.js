@@ -23,6 +23,7 @@ var playGame = function() {
   board.add(new Water(cars['waters_malas']));
   board.add(new PlayerFrog());
   board.add(new Spawner());
+  board.add(new Time());
   Game.setBoard(1, board);
   
   

@@ -66,6 +66,7 @@ var PlayerFrog = function () {
   this.up = false;
   this.down = false;
   this.tiempo = 0;
+  PlayerFrog.muerte = false;
 
   this.onTrunk = function (vt) {
     this.vx = vt;
@@ -128,8 +129,13 @@ var PlayerFrog = function () {
 	      this.y = Game.height - this.h;
 	    }
   }
-
-  var collision = this.board.collide(this, OBJECT_ENEMY);
+  if(PlayerFrog.muerte === true) {
+    	this.board.remove(this);
+    	this.board.add(new Death(this.x + this.w/2, 
+                                     this.y + this.h/2));
+      loseGame();
+  }
+  /*var collision = this.board.collide(this, OBJECT_ENEMY);
   var objeto = this.board.collide(this, OBJECT_POWERUP);
   if(collision && !objeto){
     //pierde
@@ -138,7 +144,7 @@ var PlayerFrog = function () {
                                      this.y + this.h/2));
       loseGame();
     }
-  }
+  }*/
 
   this.vx = 0;
   this.onTrunkIndicatorB = false;
@@ -152,15 +158,13 @@ PlayerFrog.prototype.type = OBJECT_PLAYER;
 
 PlayerFrog.prototype.hit = function (damage) {
   console.log("colision rana");
-  
   if (this.board.remove(this)) {
   	this.board.add(new Death(this.x + this.w/2, 
                                    this.y + this.h/2));
     loseGame();
   }
-
-
 }
+
 
 // Objetos del agua, tales como la tortuga, los diferentes tipos de troncos
 var objetos_agua = {
@@ -437,5 +441,21 @@ var Logo = function () {
 Logo.prototype = new Sprite();
 Logo.prototype.type = OBJECT_BOARD;
 
+var Time = function() {
 
+	this.tiempoPartida = 0;
+	this.step = function (dt) {
+		if (this.tiempoPartida >= 20) {
+			PlayerFrog.muerte = true;
+		}
+		else this.tiempoPartida += dt;
+  	}
 
+  	this.draw =  function(ctx){
+	    Game.ctx.fillStyle = "#FFFFFF";
+	    Game.ctx.textAlign = "left";
+
+	    Game.ctx.font = "bold 16px arial";
+	    Game.ctx.fillText("Tiempo: " + Math.round(this.tiempoPartida),0,35);
+  }
+}

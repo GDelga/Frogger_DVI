@@ -128,7 +128,7 @@ var analytics = new function(){
     ctx.textAlign = "left";
 
     ctx.font = "bold 16px arial";
-    ctx.fillText(Math.round(fps),0,20);
+    ctx.fillText("FPS: " + Math.round(fps),0,20);
   }
 }
 
