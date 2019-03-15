@@ -63,7 +63,8 @@ var PlayerFrog = function () {
   this.onTurtleB = false;
   this.subFrame = 0;
   this.jumping = false;
-
+  this.up = false;
+  this.down = false;
   this.tiempo = 0;
 
   this.onTrunk = function (vt) {
@@ -86,11 +87,19 @@ var PlayerFrog = function () {
         this.frame = this.subFrame++;
         this.tiempo = 0;
       }
-      //Si ya ha terminado la animación resetea los valores
+      //Si ya ha terminado la animación resetea los valores y haz el movimiento
       else if(this.subFrame === 6){
         this.subFrame = 0;
         this.frame = this.subFrame;
         this.jumping = false;
+        if(this.up === true) {
+        	this.y -= 48;
+        	this.up = false;
+        }
+        else if(this.down === true) {
+        	this.y += 48;
+        	this.down = false;
+        }
       }
     }
     if(this.onTrunkIndicatorB){
@@ -111,8 +120,8 @@ var PlayerFrog = function () {
 	      this.x = Game.width - this.w;
 	    }
 	    //Movimiento arriba y abajo
-	    if (Game.keys['down']) { this.y += 48; Game.pulsado = true; this.jumping = true; this.frame = this.subFrame++;}
-	    else if (Game.keys['up']) { this.y -= 48; Game.pulsado = true; this.jumping = true; this.frame = this.subFrame++;}
+	    if (Game.keys['down']) {  this.down = true; Game.pulsado = true; this.jumping = true; this.frame = this.subFrame++;}
+	    else if (Game.keys['up']) { this.up = true; Game.pulsado = true; this.jumping = true; this.frame = this.subFrame++;}
 	    else { this.y += 0; }
 	    if (this.y < 0) { this.y = 0; }
 	    else if (this.y > Game.height - this.h) {
