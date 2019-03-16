@@ -137,7 +137,7 @@ var PlayerFrog = function (winGame) {
   var win = this.board.collide(this, OBJECT_FINISH);
   if(win){
     console.log("HAS GANADO");
-    winGame(Points.puntos);
+    winGame(Points.puntos, Lives.vidas);
   }
   else{
     if(collision && !objeto){
@@ -493,15 +493,15 @@ var Time = function() {
 //VIDAS DE LA RANA
 var Lives = function(vidas) {
 
-	this.vidas = vidas;
+	Lives.vidas = vidas;
 	Lives.muerte = false;
 	this.step = function (dt) {
 		//Si hay una muerte quitamos una vida
 		if (Lives.muerte === true) {
 			Lives.muerte = false;
-			this.vidas -= 1;
-			if(this.vidas == 0) loseGame(Points.puntos); //Si no quedan vidas fin de la partida
-			else loseLive(this.vidas); //Si quedan vidas reiniciamos el nivel
+			Lives.vidas -= 1;
+			if(Lives.vidas == 0) loseGame(Points.puntos); //Si no quedan vidas fin de la partida
+			else loseLive(Lives.vidas); //Si quedan vidas reiniciamos el nivel
 		}
   	}
 
@@ -511,7 +511,7 @@ var Lives = function(vidas) {
 		    Game.ctx.textAlign = "left";
 
 		    Game.ctx.font = "bold 16px arial";
-		    Game.ctx.fillText("Vidas: " + this.vidas,1,55);
+		    Game.ctx.fillText("Vidas: " + Lives.vidas,1,55);
 		}
   }
 }
@@ -520,17 +520,17 @@ var Lives = function(vidas) {
 //PUNTOS
 var Points = function(puntos) {
 
-	this.puntos = Number(puntos);
+	Points.puntos = Number(puntos);
 	this.step = function (dt) {
   	}
 
   	this.draw =  function(ctx){
-  		if(Game.started === true) { //Si el juego ha comenzado pintamos las vidas
+  		if(Game.started === true) { //Si el juego ha comenzado pintamos los puntos
 		    Game.ctx.fillStyle = "#FFFFFF";
 		    Game.ctx.textAlign = "left";
 
 		    Game.ctx.font = "bold 16px arial";
-		    Game.ctx.fillText("Puntos: " + this.puntos,1,75);
+		    Game.ctx.fillText("Puntos: " + Points.puntos,1,75);
 		}
   }
 }
