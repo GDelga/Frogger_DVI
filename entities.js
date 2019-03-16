@@ -12,7 +12,8 @@ var sprites = {
   tronco_grande: {sx: 9, sy: 171, w:247 , h: 40 , frames: 1},
   waters_malas:{sx:247,sy:480,w:550,h:242, frames: 1},
   death: {sx:354 , sy:125 , w:52 , h:39, frames:1 },
-  turtle:{sx:5,sy:288,w:51,h:43, frames: 7}
+  turtle:{sx:5,sy:288,w:51,h:43, frames: 7},
+  meta:{sx:0,sy:0,w:550,h:50, frames: 1}
 };
 
 var OBJECT_PLAYER = 1,
@@ -20,7 +21,8 @@ var OBJECT_PLAYER = 1,
   OBJECT_ENEMY = 4,
   OBJECT_ENEMY_PROJECTILE = 8,
   OBJECT_POWERUP = 16,
-  OBJECT_BOARD = 32;
+  OBJECT_BOARD = 32,
+  OBJECT_FINISH = 64;
 
 
 /// CLASE PADRE SPRITE
@@ -53,7 +55,7 @@ Sprite.prototype.hit = function (damage) {
 
 // PLAYER
 
-var PlayerFrog = function () {
+var PlayerFrog = function (winGame) {
 
   this.setup('frog', { vx: 0, vy: 0, frame: 0, maxVel: 1 });
 
@@ -132,26 +134,32 @@ var PlayerFrog = function () {
   }
   var collision = this.board.collide(this, OBJECT_ENEMY);
   var objeto = this.board.collide(this, OBJECT_POWERUP);
-  if(collision && !objeto){
-    //pierde
-    if (this.board.remove(this)) {
-      this.board.add(new Death(this.x + this.w/2, 
-                                     this.y + this.h/2));
-      Lives.muerte = true;
+  var win = this.board.collide(this, OBJECT_FINISH);
+  if(win){
+    console.log("HAS GANADO");
+    winGame(Points.puntos);
+  }
+  else{
+    if(collision && !objeto){
+      //pierde
+      if (this.board.remove(this)) {
+        this.board.add(new Death(this.x + this.w/2, 
+                                       this.y + this.h/2));
+        Lives.muerte = true;
+      }
+     }
+    //Si se ha acabado el tiempo la rana muere
+    if(PlayerFrog.muerte === true) {
+        this.board.remove(this);
+        this.board.add(new Death(this.x + this.w/2, 
+                                       this.y + this.h/2));
+          Lives.muerte = true;
     }
-   }
-  //Si se ha acabado el tiempo la rana muere
-  if(PlayerFrog.muerte === true) {
-    	this.board.remove(this);
-    	this.board.add(new Death(this.x + this.w/2, 
-                                     this.y + this.h/2));
-      	Lives.muerte = true;
+    this.vx = 0;
+    this.onTrunkIndicatorB = false;
+    this.onTurtleB = false;
+    }
   }
-  this.vx = 0;
-  this.onTrunkIndicatorB = false;
-  this.onTurtleB = false;
-  }
-
 }
 
 PlayerFrog.prototype = new Sprite();
@@ -186,6 +194,11 @@ var objetos_agua = {
     x: 0, y: 100, sprite: 'turtle', health: 10, V: 20, frame: 0
   },
 };
+var objetos_objetivos = {
+  meta:{
+    x: 0, y: 0, sprite: 'meta', health: 10, V: 20, frame: 0
+  }
+}
 
 var Trunk = function (blueprint) {
   console.log("setup");
@@ -335,6 +348,17 @@ Water.prototype = new Sprite();
 Water.prototype.type = OBJECT_ENEMY;
 Water.prototype.draw = function(){};
 Water.prototype.step = function (dt) {
+
+}
+//Meta
+var Meta = function(blueprint){
+  this.setup(blueprint.sprite, blueprint);
+
+}
+Meta.prototype = new Sprite();
+Meta.prototype.type = OBJECT_FINISH;
+Meta.prototype.draw = function(){};
+Meta.prototype.step = function (dt) {
 
 }
 
@@ -496,7 +520,7 @@ var Lives = function(vidas) {
 //PUNTOS
 var Points = function(puntos) {
 
-	Points.puntos = puntos;
+	this.puntos = Number(puntos);
 	this.step = function (dt) {
   	}
 
@@ -506,7 +530,7 @@ var Points = function(puntos) {
 		    Game.ctx.textAlign = "left";
 
 		    Game.ctx.font = "bold 16px arial";
-		    Game.ctx.fillText("Puntos: " + Points.puntos,1,75);
+		    Game.ctx.fillText("Puntos: " + this.puntos,1,75);
 		}
   }
 }

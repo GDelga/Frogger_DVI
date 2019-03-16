@@ -26,7 +26,8 @@ var playGame = function() {
   
   var board = new GameBoard();
   board.add(new Water(cars['waters_malas']));
-  board.add(new PlayerFrog());
+  board.add(new Meta(objetos_objetivos['meta']));
+  board.add(new PlayerFrog(winGame));
   board.add(new Spawner());
   board.add(new Time());
   Game.setBoard(1, board);
@@ -36,13 +37,13 @@ var playGame = function() {
 
 //CUANDO EL JUGADOR GANA
 var winGame = function(points) {
-  Game.setBoard(3,new TitleScreen("You win! You have " + (points + 100) + "points now!", 
+  Game.setBoard(3,new TitleScreen("You win! You have " + (Number(points) + 100) + "points now!", 
                                   "Press fire to continue",
                                   playGame));
   //INICIALIZAMOS LAS VIDAS PARA LA SIGUIENTE PARTIDA
   var board = new GameBoard();
   board.add(new Lives(5));
-  board.add(new Points(points + 100));
+  board.add(new Points(Number(points + 100)));
   Game.setBoard(2, board);
 };
 
