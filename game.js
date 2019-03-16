@@ -37,14 +37,25 @@ var playGame = function() {
 
 //CUANDO EL JUGADOR GANA
 var winGame = function(points) {
-  Game.setBoard(3,new TitleScreen("You win! You have " + (Number(points) + 100) + "points now!", 
-                                  "Press fire to continue",
-                                  playGame));
-  //INICIALIZAMOS LAS VIDAS PARA LA SIGUIENTE PARTIDA
+  var board = new GameBoard();
+  Game.setBoard(1,board);
+  board.add(new TitleScreen("You win! You have " + (Number(points) + 100) + "points now!", 
+  "Press fire to continue",
+  playGame));
+  Game.setBoard(0, board);
+  //PONEMOS LAS VIDAS
   var board = new GameBoard();
   board.add(new Lives(5));
-  board.add(new Points(Number(points + 100)));
+  board.add(new Points(0));
   Game.setBoard(2, board);
+  /*Game.setBoard(3,new TitleScreen("You win! You have " + (Number(points) + 100) + "points now!", 
+                                  "Press fire to continue",
+                                  playGame));*/
+  //INICIALIZAMOS LAS VIDAS PARA LA SIGUIENTE PARTIDA
+  /*var board = new GameBoard();
+  board.add(new Lives(5));
+  board.add(new Points(Number(points + 100)));
+  Game.setBoard(2, board);*/
 };
 
 
