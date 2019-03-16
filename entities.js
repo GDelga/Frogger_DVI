@@ -421,6 +421,10 @@ var Spawner = function () {
   console.log("Se mete en Spawner");
   // Inicializo t, que sera la variable que cuenta el tiempo para pintar un objeto y el siguiente
   this.t = 0;
+  //Inicializo el inicio de los patrones para que se vuelvan a pintar en el momento adecuado
+  for(var i = 0; i < patrones.length; i++) {
+  	patrones[i].inicio = 0;
+  }
 }
 
 Spawner.prototype.step = function (dt) {
