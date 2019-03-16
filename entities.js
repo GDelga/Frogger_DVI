@@ -7,9 +7,9 @@ var sprites = {
   coche_verde: {sx: 102, sy: 0,w: 100, h: 50, frames: 1},
   coche_azul: {sx: 8, sy: 4, w:92 , h: 50 , frames: 1},
   coche_amarillo: {sx: 212 , sy: 2, w: 105 , h: 50, frames: 1},
-  tronco_mediano: {sx: 10, sy: 123, w:190 , h: 38 , frames: 1},
-  tronco_pequeno: {sx: 270, sy: 173, w:130 , h: 50 , frames: 1},
-  tronco_grande: {sx: 9, sy: 171, w:92 , h: 60 , frames: 1},
+  tronco_mediano: {sx: 10, sy: 123, w:190 , h: 40 , frames: 1},
+  tronco_pequeno: {sx: 270, sy: 173, w:130 , h: 40 , frames: 1},
+  tronco_grande: {sx: 9, sy: 171, w:247 , h: 40 , frames: 1},
   waters_malas:{sx:247,sy:480,w:550,h:242, frames: 1},
   death: {sx:354 , sy:125 , w:52 , h:39, frames:1 },
   turtle:{sx:5,sy:288,w:51,h:43, frames: 7}
@@ -173,15 +173,18 @@ var objetos_agua = {
     x: 0, y: 200, sprite: 'turtle', health: 10, V: 20, frame: 0
   },
   tronco_pequeno: {
-    x: 400, y: 248, sprite: 'tronco_pequeno', health: 10, V: -50
+    x: 500, y: 248, sprite: 'tronco_pequeno', health: 10, V: -50
   },
   tronco_mediano: {
-    x: 400, y: 150, sprite: 'tronco_mediano', health: 10, V: -50
+    x: 500, y: 150, sprite: 'tronco_mediano', health: 10, V: -75
     
   },
   tronco_grande: {
-
-  }
+    x: 500, y: 50, sprite: 'tronco_grande', health: 10, V: -100
+  },
+  tortuga_dos: {
+    x: 0, y: 100, sprite: 'turtle', health: 10, V: 20, frame: 0
+  },
 };
 
 var Trunk = function (blueprint) {
@@ -383,11 +386,10 @@ var patrones = [
   {inicio: 0, intervalo: 5, campo: 0, tipo: 'coche_azul'},      // Coche azul
   // Aqui vienen los patrones del agua
   {inicio: 0, intervalo: 5, campo: 1, tipo: 'tortuga_uno'},         // Tortuga
+  {inicio: 0, intervalo: 9, campo: 1, tipo: 'tortuga_dos'},         // Tortuga
   {inicio: 0, intervalo: 4, campo: 1, tipo: 'tronco_pequeno'},   // Tronco pequeño
-  {inicio: 0, intervalo: 4, campo: 1, tipo: 'tronco_mediano'}   // Tronco pequeño
-  // Faltan por hacer asi que no los meto
-  /*{inicio: 0, intervalo: 4, campo: 1, tipo: 'tronco_medio'}   // Tronco medio
-  {inicio: 0, intervalo: 4, campo: 1, tipo: 'tronco_grande'}*/  // Tronco grande
+  {inicio: 0, intervalo: 4, campo: 1, tipo: 'tronco_mediano'},   // Tronco mediano
+  {inicio: 0, intervalo: 4, campo: 1, tipo: 'tronco_grande'}   // Tronco grande
 ]
 
 // Clase que metera los objetos del juego continuamente en la pantalla
@@ -416,7 +418,7 @@ Spawner.prototype.step = function (dt) {
       // Su campo es el agua
       else if (campo == 1){
         // Lo añado al tablero
-        if(i === 5) this.board.add(new Turtle(objetos_agua[patrones[i].tipo]));
+        if(i === 5 || i === 6) this.board.add(new Turtle(objetos_agua[patrones[i].tipo]));
         else this.board.add(new Trunk(objetos_agua[patrones[i].tipo]));
       }
       
