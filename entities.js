@@ -104,6 +104,11 @@ var PlayerFrog = function (winGame) {
         	this.y += 48;
         	this.down = false;
         }
+       	else { this.y += 0; }
+	    if (this.y < 0) { this.y = 0; }
+	    else if (this.y > Game.height - this.h) {
+	      this.y = Game.height - this.h;
+	    }
       }
     }
     if(this.onTrunkIndicatorB){
@@ -115,7 +120,7 @@ var PlayerFrog = function (winGame) {
       console.log("estoy en la tortuga");
     }
     //Movimiento a izquierda y derecha
-    if(Game.pulsado == false) {
+    if(Game.pulsado == false && this.jumping == false) {
 	    if (Game.keys['left']) { this.x -= 40; Game.pulsado = true; }
 	    else if (Game.keys['right']) { this.x += 40; Game.pulsado = true;}
 	    else { this.x += 0; }
@@ -126,11 +131,6 @@ var PlayerFrog = function (winGame) {
 	    //Movimiento arriba y abajo
 	    if (Game.keys['down']) {  this.down = true; Game.pulsado = true; this.jumping = true; this.frame = this.subFrame++;}
 	    else if (Game.keys['up']) { this.up = true; Game.pulsado = true; this.jumping = true; this.frame = this.subFrame++;}
-	    else { this.y += 0; }
-	    if (this.y < 0) { this.y = 0; }
-	    else if (this.y > Game.height - this.h) {
-	      this.y = Game.height - this.h;
-	    }
   }
   var collision = this.board.collide(this, OBJECT_ENEMY);
   var objeto = this.board.collide(this, OBJECT_POWERUP);
