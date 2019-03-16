@@ -7,7 +7,7 @@ var sprites = {
   coche_verde: {sx: 102, sy: 0,w: 100, h: 50, frames: 1},
   coche_azul: {sx: 8, sy: 4, w:92 , h: 50 , frames: 1},
   coche_amarillo: {sx: 212 , sy: 2, w: 105 , h: 50, frames: 1},
-  tronco_mediano: {sx: 10, sy: 123, w:92 , h: 52 , frames: 1},
+  tronco_mediano: {sx: 10, sy: 123, w:190 , h: 38 , frames: 1},
   tronco_pequeno: {sx: 270, sy: 173, w:130 , h: 50 , frames: 1},
   tronco_grande: {sx: 9, sy: 171, w:92 , h: 60 , frames: 1},
   waters_malas:{sx:247,sy:480,w:550,h:242, frames: 1},
@@ -169,14 +169,15 @@ PlayerFrog.prototype.hit = function (damage) {
 
 // Objetos del agua, tales como la tortuga, los diferentes tipos de troncos
 var objetos_agua = {
-  tortuga: {
+  tortuga_uno: {
     x: 0, y: 200, sprite: 'turtle', health: 10, V: 20, frame: 0
   },
   tronco_pequeno: {
     x: 400, y: 248, sprite: 'tronco_pequeno', health: 10, V: -50
   },
   tronco_mediano: {
-
+    x: 400, y: 150, sprite: 'tronco_mediano', health: 10, V: -50
+    
   },
   tronco_grande: {
 
@@ -381,8 +382,9 @@ var patrones = [
   {inicio: 0, intervalo: 3.5, campo: 0, tipo: 'coche_verde'},   // Coche verde
   {inicio: 0, intervalo: 5, campo: 0, tipo: 'coche_azul'},      // Coche azul
   // Aqui vienen los patrones del agua
-  {inicio: 0, intervalo: 5, campo: 1, tipo: 'tortuga'},         // Tortuga
-  {inicio: 0, intervalo: 4, campo: 1, tipo: 'tronco_pequeno'}   // Tronco pequeño
+  {inicio: 0, intervalo: 5, campo: 1, tipo: 'tortuga_uno'},         // Tortuga
+  {inicio: 0, intervalo: 4, campo: 1, tipo: 'tronco_pequeno'},   // Tronco pequeño
+  {inicio: 0, intervalo: 4, campo: 1, tipo: 'tronco_mediano'}   // Tronco pequeño
   // Faltan por hacer asi que no los meto
   /*{inicio: 0, intervalo: 4, campo: 1, tipo: 'tronco_medio'}   // Tronco medio
   {inicio: 0, intervalo: 4, campo: 1, tipo: 'tronco_grande'}*/  // Tronco grande
