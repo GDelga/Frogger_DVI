@@ -1,6 +1,6 @@
 var sprites = {
   logo: { sx: 48, sy: 400, w: 304, h: 225, frames: 1},
-  frog: { sx: 0 , sy: 344, w: 40, h: 42, frames: 6 },
+  frog: { sx: 0 , sy: 346, w: 40, h: 24, frames: 6 },
   fondo: { sx: 422, sy: 0, w: 550, h: 625, frames: 1 },
   camion_marron: {sx: 148, sy: 62, w: 180 , h: 45, frames: 1},
   coche_bomberos: {sx: 7, sy: 62, w: 122, h: 45, frames: 1},
@@ -58,7 +58,7 @@ var PlayerFrog = function () {
   this.setup('frog', { vx: 0, vy: 0, frame: 0, maxVel: 1 });
 
   this.x = Game.width / 2 -20 - this.w / 2;
-  this.y = Game.height - this.h;
+  this.y = Game.height - this.h - 12;
   this.onTrunkIndicatorB = false;
   this.onTurtleB = false;
   this.subFrame = 0;
@@ -84,7 +84,7 @@ var PlayerFrog = function () {
     //Si esta saltando hace la animación de saltar
     if(this.jumping){
       //Calcula el tiempo para cada frame y si ya ha terminado la animacion
-      if(this.tiempo > 0.1 && this.subFrame < 6){
+      if(this.tiempo > 0.02 && this.subFrame < 6){
         this.frame = this.subFrame++;
         this.tiempo = 0;
       }
