@@ -236,6 +236,7 @@ var Turtle = function (blueprint) {
   this.subFrame = 0;
   this.tiempo = 0;
   this.buceo = true;
+  this.espacioEntreBuceo = false;
 
 }
 Turtle.prototype = new Sprite();
@@ -246,16 +247,21 @@ Turtle.prototype.step = function (dt) {
   console.log("animacion de la tortuga, frame " + this.frame );
   this.tiempo += dt;
   console.log("tiempo " + this.tiempo + " buceo " + this.buceo );
-  if(this.tiempo > 0.1 && this.buceo){
-    console.log("entro");
-    if(this.subFrame === 7) this.buceo = false;
+  if(this.tiempo > 0.2 && !this.espacioEntreBuceo && this.buceo){
+    if(this.subFrame === 8) this.espacioEntreBuceo = true; //Si no llega a 8, no se ve la ultima imagen de la tortuga
     else{
-      console.log("entro");
       this.frame = this.subFrame++;
       this.tiempo = 0;
     }
   }
-  else if(this.tiempo > 0.3 && !this.buceo){
+  else if(this.espacioEntreBuceo === true && this.tiempo > 0.9) {
+  	//Para hacer que la rana muera en este estado
+  	this.tiempo = 0;
+  	this.buceo = false;
+  	this.espacioEntreBuceo = false;
+  	this.frame = this.subFrame = 6; //Para que no haya fallos de imagen
+  }
+  else if(this.tiempo > 0.15 && !this.espacioEntreBuceo && !this.buceo){
     console.log("entro");
     if(this.subFrame === 0) this.buceo = true;
     else{
@@ -279,9 +285,12 @@ Turtle.prototype.step = function (dt) {
   }
 
   var collision = this.board.collide(this, OBJECT_PLAYER);
-  if (collision) {
+  if (collision && !this.espacioEntreBuceo) {
     console.log("colision con tortuga");
     collision.onTurtle(this.V);
+  }
+  else if(collision && this.espacioEntreBuceo) { //Si la tortuga esta sin salir del agua, la rana muere
+  	collision.hit();
   }
 
 }
@@ -295,13 +304,13 @@ var cars = {
     x: 12, y: 480, sprite: 'coche_bomberos',health: 10, V:100
   },
   coche_verde: {
-    x: 12, y: 428, sprite: 'coche_verde', health: 20, V: 50
+    x: 12, y: 428, sprite: 'coche_verde', health: 20, V: 60
   },
   coche_azul: {
     x: 12, y: 335, sprite: 'coche_azul', health: 5, V: 75
   },
   coche_amarillo: {
-    x: 12, y: 379, sprite: 'coche_amarillo', health: 10, V: 250
+    x: 12, y: 379, sprite: 'coche_amarillo', health: 10, V: 150
   },
   // Menos este que no se que hace ahi
   waters_malas:{
@@ -404,9 +413,9 @@ tipo:       Para llamar al objeto dentro de su array de objetos
 var patrones = [
   // Patrones de los coches
   {inicio: 0, intervalo: 6, campo: 0, tipo: 'camion_marron'},   // Camion marron
-  {inicio: 0, intervalo: 4, campo: 0, tipo: 'coche_bomberos'},  // Ambulancia
+  {inicio: 0, intervalo: 5.5, campo: 0, tipo: 'coche_bomberos'},  // Ambulancia
   {inicio: 0, intervalo: 5, campo: 0, tipo: 'coche_amarillo'},  // Coche amarillo
-  {inicio: 0, intervalo: 3.5, campo: 0, tipo: 'coche_verde'},   // Coche verde
+  {inicio: 0, intervalo: 4, campo: 0, tipo: 'coche_verde'},   // Coche verde
   {inicio: 0, intervalo: 5, campo: 0, tipo: 'coche_azul'},      // Coche azul
   // Aqui vienen los patrones del agua
   {inicio: 0, intervalo: 5, campo: 1, tipo: 'tortuga_uno'},         // Tortuga
@@ -477,7 +486,7 @@ Logo.prototype.type = OBJECT_BOARD;
 //TIEMPO DE JUEGO
 var Time = function() {
 
-	this.tiempoPartida = 20;
+	this.tiempoPartida = 40;
 	this.step = function (dt) {
 		if (this.tiempoPartida <= 0) {//Quitamos una vida a la rana si se acaba el tiempo
 			PlayerFrog.muerte = true;
