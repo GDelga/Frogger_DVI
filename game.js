@@ -28,7 +28,6 @@ var playGame = function() {
   board.add(new Water(cars['waters_malas']));
   board.add(new Meta(objetos_objetivos['meta']));
   board.add(new PlayerFrog(winGame));
-  board.add(new Mosca(objetos_objetivos['moscas']));
   board.add(new Spawner());
   board.add(new Time());
   Game.setBoard(1, board);

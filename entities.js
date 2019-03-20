@@ -217,9 +217,6 @@ var objetos_agua = {
 var objetos_objetivos = {
   meta:{
     x: 0, y: 0, sprite: 'meta', health: 10, V: 20, frame: 0
-  },
-  moscas: {
-  	x: 100, y: 450, sprite: 'mosca', health: 10, V:0
   }
 }
 
@@ -503,8 +500,10 @@ var patrones = [
   {inicio: 0, intervalo: 6, campo: 1, tipo: 'tronco_grande'},   // Tronco grande
   {inicio: 0, intervalo: 4, campo: 1, tipo: 'hoja'},   // Tronco grande
   // Patron de la serpiente
-  {inicio: 0, intervalo:7, campo: 0, tipo: 'serpiente' }
+  {inicio: 0, intervalo:7, campo: 0, tipo: 'serpiente'},
+  {inicio: 0, intervalo:7, campo: 2, tipo: 'mosca'}
 ]
+
 
 // Clase que metera los objetos del juego continuamente en la pantalla
 var Spawner = function () {
@@ -540,6 +539,14 @@ Spawner.prototype.step = function (dt) {
         else if(i == 10) this.board.add(new WaterLily(objetos_agua[patrones[i].tipo]));
         else this.board.add(new Trunk(objetos_agua[patrones[i].tipo]));
       }
+      else if(campo == 2) {
+      		var xM = Math.round(Math.random()*(549-10)+parseInt(10));
+      		var yM = Math.round(Math.random()*(624-10)+parseInt(10));
+      		var moscas = {
+  				x: xM, y: yM, sprite: 'mosca', health: 10, V:0
+  			};
+  			this.board.add(new Mosca(moscas));
+      }
       
     }
   }
@@ -568,7 +575,7 @@ Logo.prototype.type = OBJECT_BOARD;
 //TIEMPO DE JUEGO
 var Time = function() {
 
-	this.tiempoPartida = 40;
+	this.tiempoPartida = 90;
 	this.step = function (dt) {
 		if (this.tiempoPartida <= 0) {//Quitamos una vida a la rana si se acaba el tiempo
 			PlayerFrog.muerte = true;
