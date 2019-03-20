@@ -13,14 +13,17 @@ var sprites = {
   waters_malas:{sx:247,sy:480,w:550,h:242, frames: 1},
   death: {sx:354 , sy:125 , w:52 , h:39, frames:1 },
   turtle:{sx:5,sy:288,w:51,h:43, frames: 7},
-  meta:{sx:0,sy:0,w:550,h:50, frames: 1}
+  meta:{sx:0,sy:0,w:550,h:50, frames: 1},
+  serpiente: {sx: 322, sy: 0, w: 81, h: 57, frames: 1},
+  hoja: {sx: 0, sy: 232, w: 52, h: 45, frames: 1},
+  mosca: {sx:54, sy:236,w:37,h:37, frames: 1}
 };
 
 var OBJECT_PLAYER = 1,
   OBJECT_PLAYER_PROJECTILE = 2,
   OBJECT_ENEMY = 4,
-  OBJECT_ENEMY_PROJECTILE = 8,
-  OBJECT_POWERUP = 16,
+  OBJECT_POWERUP = 8,
+  OBJECT_TRANSPORT = 16,
   OBJECT_BOARD = 32,
   OBJECT_FINISH = 64;
 
@@ -29,6 +32,7 @@ var OBJECT_PLAYER = 1,
 var Sprite = function () { }
 
 Sprite.prototype.setup = function (sprite, props) {
+	console.log(sprite);
   this.sprite = sprite;
   this.merge(props);
   this.frame = this.frame || 0;
@@ -63,12 +67,19 @@ var PlayerFrog = function (winGame) {
   this.y = Game.height - this.h - 12;
   this.onTrunkIndicatorB = false;
   this.onTurtleB = false;
+  this.onWaterLilyIndicatorB = false;
   this.subFrame = 0;
   this.jumping = false;
   this.up = false;
   this.down = false;
   this.tiempo = 0;
   PlayerFrog.muerte = false;
+
+  this.onWaterLily = function (vt) {
+  	this.vx = vt;
+  	console.log(this.vx);
+  	this.onWaterLilyIndicatorB = true;
+  }
 
   this.onTrunk = function (vt) {
     this.vx = vt;
@@ -119,6 +130,10 @@ var PlayerFrog = function (winGame) {
       this.x += this.vx * dt;
       console.log("estoy en la tortuga");
     }
+    if(this.onWaterLilyIndicatorB){
+      this.x += this.vx * dt;
+      console.log("estoy en la hoja");
+    }
     //Movimiento a izquierda y derecha
     if(Game.pulsado == false && this.jumping == false) {
 	    if (Game.keys['left']) { this.x -= 40; Game.pulsado = true; }
@@ -133,8 +148,9 @@ var PlayerFrog = function (winGame) {
 	    else if (Game.keys['up']) { this.up = true; Game.pulsado = true; this.jumping = true; this.frame = this.subFrame++;}
   }
   var collision = this.board.collide(this, OBJECT_ENEMY);
-  var objeto = this.board.collide(this, OBJECT_POWERUP);
+  var objeto = this.board.collide(this,OBJECT_TRANSPORT);
   var win = this.board.collide(this, OBJECT_FINISH);
+  var mosca = this.board.collide(this, OBJECT_POWERUP);
   if(win){
     console.log("HAS GANADO");
     winGame(Points.puntos, Lives.vidas);
@@ -158,6 +174,7 @@ var PlayerFrog = function (winGame) {
     this.vx = 0;
     this.onTrunkIndicatorB = false;
     this.onTurtleB = false;
+    this.onWaterLilyIndicatorB = false;
     }
   }
 }
@@ -178,35 +195,70 @@ PlayerFrog.prototype.hit = function (damage) {
 // Objetos del agua, tales como la tortuga, los diferentes tipos de troncos
 var objetos_agua = {
   tortuga_uno: {
-    x: 0, y: 200, sprite: 'turtle', health: 10, V: 20, frame: 0
+    x: 250, y: 200, sprite: 'turtle', health: 10, V: 20, frame: 0
   },
   tronco_pequeno: {
     x: 500, y: 248, sprite: 'tronco_pequeno', health: 10, V: -50
   },
   tronco_mediano: {
-    x: 500, y: 150, sprite: 'tronco_mediano', health: 10, V: -75
+    x: 500, y: 150, sprite: 'tronco_mediano', health: 10, V: -50
     
   },
   tronco_grande: {
-    x: 500, y: 50, sprite: 'tronco_grande', health: 10, V: -100
+    x: 500, y: 50, sprite: 'tronco_grande', health: 10, V: -50
   },
   tortuga_dos: {
     x: 0, y: 100, sprite: 'turtle', health: 10, V: 20, frame: 0
   },
+  hoja: {
+  	x:0, y: 200, sprite: 'hoja', health: 10, V: 20
+  }
 };
 var objetos_objetivos = {
   meta:{
     x: 0, y: 0, sprite: 'meta', health: 10, V: 20, frame: 0
+  },
+  moscas: {
+  	x: 100, y: 450, sprite: 'mosca', health: 10, V:0
   }
 }
 
+//Hoja
+var WaterLily = function (blueprint) {
+  console.log("setup");
+  this.setup(blueprint.sprite, blueprint);
+
+}
+WaterLily.prototype = new Sprite();
+WaterLily.prototype.type =OBJECT_TRANSPORT;
+
+WaterLily.prototype.step = function (dt) {
+  this.t += dt;
+  this.vx = this.V;
+  this.vy = 0;
+  this.x += this.vx * dt;
+  this.y += this.vy * dt;
+  this.tiempo = 0;
+  if (this.x > 200) {
+    console.log("remove");
+    this.board.remove(this);
+  }
+
+  var collision = this.board.collide(this, OBJECT_PLAYER);
+  if (collision) {
+    console.log("colision con hoja");
+    collision.onWaterLily(this.V);
+  }
+
+}
+//Tronco
 var Trunk = function (blueprint) {
   console.log("setup");
   this.setup(blueprint.sprite, blueprint);
 
 }
 Trunk.prototype = new Sprite();
-Trunk.prototype.type = OBJECT_POWERUP;
+Trunk.prototype.type =OBJECT_TRANSPORT;
 
 Trunk.prototype.step = function (dt) {
   this.t += dt;
@@ -229,6 +281,8 @@ Trunk.prototype.step = function (dt) {
   }
 
 }
+
+//Tortuga
 var Turtle = function (blueprint) {
   //this.setup('frog', { vx: 0, vy: 0, frame: 0, maxVel: 1 });
   console.log("setup");
@@ -240,7 +294,7 @@ var Turtle = function (blueprint) {
 
 }
 Turtle.prototype = new Sprite();
-Turtle.prototype.type = OBJECT_POWERUP;
+Turtle.prototype.type =OBJECT_TRANSPORT;
 
 Turtle.prototype.step = function (dt) {
   //Animacion de la tortuga
@@ -312,9 +366,13 @@ var cars = {
   coche_amarillo: {
     x: 12, y: 379, sprite: 'coche_amarillo', health: 10, V: 150
   },
-  // Menos este que no se que hace ahi
+  // Agua
   waters_malas:{
     x: 0, y: 49, sprite: 'waters_malas', health: 10
+  },
+  //Serpiente
+  serpiente:{
+    x: 500, y: 285, sprite: 'serpiente', health: 10, V: -75
   }
 };
 
@@ -371,6 +429,26 @@ Meta.prototype.step = function (dt) {
 
 }
 
+//Mosca
+var Mosca = function (blueprint) {
+ console.log(blueprint);
+  this.setup(blueprint.sprite, blueprint);
+  console.log("Mosca dentro");
+
+}
+
+Mosca.prototype = new Sprite();
+Mosca.prototype.type = OBJECT_POWERUP;
+
+Mosca.prototype.step = function (dt) {
+  var collision = this.board.collide(this, OBJECT_PLAYER);
+  if (collision) {
+    this.board.remove(this);
+    Points.puntos += 50;
+  }
+
+}
+
 ///// MUERTE DE LA RANA
 
 var Death = function(centerX,centerY) {
@@ -421,8 +499,11 @@ var patrones = [
   {inicio: 0, intervalo: 5, campo: 1, tipo: 'tortuga_uno'},         // Tortuga
   {inicio: 0, intervalo: 9, campo: 1, tipo: 'tortuga_dos'},         // Tortuga
   {inicio: 0, intervalo: 4, campo: 1, tipo: 'tronco_pequeno'},   // Tronco pequeño
-  {inicio: 0, intervalo: 4, campo: 1, tipo: 'tronco_mediano'},   // Tronco mediano
-  {inicio: 0, intervalo: 4, campo: 1, tipo: 'tronco_grande'}   // Tronco grande
+  {inicio: 0, intervalo: 5, campo: 1, tipo: 'tronco_mediano'},   // Tronco mediano
+  {inicio: 0, intervalo: 6, campo: 1, tipo: 'tronco_grande'},   // Tronco grande
+  {inicio: 0, intervalo: 4, campo: 1, tipo: 'hoja'},   // Tronco grande
+  // Patron de la serpiente
+  {inicio: 0, intervalo:7, campo: 0, tipo: 'serpiente' }
 ]
 
 // Clase que metera los objetos del juego continuamente en la pantalla
@@ -456,6 +537,7 @@ Spawner.prototype.step = function (dt) {
       else if (campo == 1){
         // Lo añado al tablero
         if(i === 5 || i === 6) this.board.add(new Turtle(objetos_agua[patrones[i].tipo]));
+        else if(i == 10) this.board.add(new WaterLily(objetos_agua[patrones[i].tipo]));
         else this.board.add(new Trunk(objetos_agua[patrones[i].tipo]));
       }
       
